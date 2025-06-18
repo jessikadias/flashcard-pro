@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +11,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            UserSeeder::class,
+            DeckSeeder::class,
+            FlashcardSeeder::class,
+            DeckSharingSeeder::class,
         ]);
+
+        $this->command->info('FlashcardPro sample data created successfully!');
+        $this->command->info('Sample users:');
+        $this->command->info('- john@example.com (password: password)');
+        $this->command->info('- jane@example.com (password: password)');
+        $this->command->info('- bob@example.com (password: password)');
+        $this->command->info('- test@example.com (password: password)');
     }
 }
