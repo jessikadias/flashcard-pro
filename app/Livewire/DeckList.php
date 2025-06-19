@@ -27,6 +27,16 @@ class DeckList extends Component
     protected string $paginationTheme = 'tailwind';
 
     /**
+     * Deck to delete
+     */         
+    public ?Deck $deckToDelete = null;
+
+    /**
+     * Show delete modal
+     */
+    public bool $showDeleteModal = false;
+
+    /**
      * Render the component
      */
     public function render()
@@ -74,25 +84,27 @@ class DeckList extends Component
      */
     public function deleteDeck(Deck $deck)
     {
-        // Check if user can delete this deck
-        if (!$deck->canEdit(auth()->user())) {
-            session()->flash('error', 'You can only delete your own decks.');
+        if (!$this->deckToDelete) {
             return;
         }
-
-        // Confirm deletion
-        if (!$this->confirmDeletion($deck)) {
+        // Check if user can delete this deck
+        if (!$this->deckToDelete->canEdit(auth()->user())) {
+            session()->flash('error', 'You can only delete your own decks.');
+            $this->cancelDelete();
             return;
         }
 
         try {
-            $deckName = $deck->name;
-            $deck->delete();
+            $deckName = $this->deckToDelete->name;
+            $this->deckToDelete->delete();
 
             session()->flash('success', "Deck '{$deckName}' has been deleted successfully.");
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to delete deck. Please try again.');
         }
+
+        // Clean the modal and the deckToDelete
+        $this->cancelDelete();
     }
 
     /**
@@ -144,9 +156,19 @@ class DeckList extends Component
     /**
      * Confirm deck deletion with user
      */
-    private function confirmDeletion(Deck $deck): bool
+    public function confirmDeletion(Deck $deck)
     {
-        return true;
+        $this->deckToDelete = $deck;
+        $this->showDeleteModal = true;
+    }
+
+    /**
+     * Cancel deck deletion
+     */
+    public function cancelDelete()
+    {
+        $this->deckToDelete = null;
+        $this->showDeleteModal = false;
     }
 
     /**
