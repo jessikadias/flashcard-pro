@@ -197,26 +197,6 @@ class DeckList extends Component
         $this->cancelDelete();
     }
 
-    /**
-     * Toggle public/private status of a deck
-     */
-    public function togglePublicStatus(Deck $deck)
-    {
-        // Check if user can edit this deck
-        if (!$deck->canEdit(auth()->user())) {
-            session()->flash('error', 'You can only modify your own decks.');
-            return;
-        }
-
-        try {
-            $deck->update(['is_public' => !$deck->is_public]);
-            
-            $status = $deck->is_public ? 'public' : 'private';
-            session()->flash('success', "Deck '{$deck->name}' is now {$status}.");
-        } catch (\Exception $e) {
-            session()->flash('error', 'Failed to update deck status. Please try again.');
-        }
-    }
 
     /**
      * Check if user can edit a specific deck
