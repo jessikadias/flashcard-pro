@@ -7,12 +7,12 @@
 ])
 
 @php
-$baseClasses = 'rounded-lg transition shadow flex items-center justify-center whitespace-nowrap';
+$baseClasses = 'rounded-md transition shadow flex items-center justify-center whitespace-nowrap';
 
 $sizeClasses = match ($size) {
     'lg' => 'px-6 py-2 text-xl',
-    'md' => 'px-6 py-2 text-lg',
-    'sm' => 'px-4 py-0.5 text-md',
+    'md' => 'px-4 py-2 text-md',
+    'sm' => 'px-4 py-1 text-md',
     default => 'px-6 py-2 text-xl',
 };
 
