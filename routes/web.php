@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DeckController;
 use App\Livewire\DeckList;
+use App\Livewire\DeckDetails;
 
 // Welcome route
 Route::get('/', function () {
@@ -25,9 +26,9 @@ Route::middleware('auth')->group(function () {
 // Deck routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/decks', DeckList::class)->name('decks.index');
-    Route::get('/decks/create', [DeckController::class, 'create'])->name('decks.create');
-    Route::get('/decks/{deck}', [DeckController::class, 'show'])->name('decks.show');
-    Route::get('/decks/{deck}/edit', [DeckController::class, 'edit'])->name('decks.edit');
+    Route::get('/decks/{deck}/edit', DeckDetails::class)->name('decks.edit');
+    Route::get('/decks/{deck}/flashcards/{flashcardId?}', \App\Livewire\Flashcard::class)->name('flashcards.edit');
+    Route::get('/decks/{deck}/study', \App\Livewire\StudyDeck::class)->name('decks.study');
 });
 
 require __DIR__.'/auth.php';
