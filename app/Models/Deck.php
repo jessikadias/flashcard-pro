@@ -24,7 +24,6 @@ class Deck extends Model
      */
     protected $fillable = [
         'name',
-        'description',
         'is_public',
         'user_id',
     ];
@@ -59,6 +58,9 @@ class Deck extends Model
                     ->withTimestamps();
     }
 
+    /**
+     * The users that have shared the deck.
+     */
     public function sharedByUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'shared_decks', 'deck_id', 'user_id')
@@ -74,6 +76,9 @@ class Deck extends Model
         return $query->where('is_public', true);
     }
 
+    /**
+     * The scope for decks accessible by a specific user.
+     */
     public function scopeAccessibleBy($query, User $user)
     {
         return $query->where(function ($q) use ($user) {
@@ -90,6 +95,9 @@ class Deck extends Model
         return $this->flashcards()->count();
     }
 
+    /**
+     * Check if the user can edit the deck.
+     */
     public function canEdit(User $user): bool
     {
         return $this->user_id === $user->id;
