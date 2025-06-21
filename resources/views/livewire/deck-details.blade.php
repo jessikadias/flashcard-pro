@@ -7,15 +7,31 @@
                     <x-icons.arrow-left class="w-8 h-8" />
                 </a>
                 
-                <div class="flex-grow">
-                    <div class="flex items-center justify-start">
-                        <h1 class="text-3xl text-gray-700">{{ $deck->name }}</h1>
-                        @if ($this->isOwner())
-                            <button wire:click="openEditModal" class="text-gray-700 p-2 rounded-full hover:bg-gray-200 transition">
-                                <x-icons.pencil />
-                            </button>
-                        @endif
-                    </div>
+                <div class="flex-grow flex items-center justify-between min-w-0">
+                    <h1 class="text-3xl sm:text-2xl md:text-3xl text-gray-700 truncate min-w-0 flex-1 mr-4">{{ $deck->name }}</h1>
+                    
+                    @if ($this->isOwner() || $this->isSharedWith())
+                        <div class="flex-shrink-0">
+                            <x-kebab-menu>
+                                @if ($this->isOwner())
+                                    <button @click="$dispatch('open-edit-modal'); open = false" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <x-icons.pencil class="w-3 h-3 mr-2" />
+                                        <span>Edit Deck Title</span>
+                                    </button>
+
+                                    <button @click="$dispatch('openDeleteDeckModal', { deckId: {{ $deck->id }} }); open = false" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <x-icons.trash class="w-3 h-3 mr-2" />
+                                        <span>Delete Deck</span>
+                                    </button>
+                                @else
+                                    <button @click="$dispatch('openRemoveDeckSharingModal', { deckId: {{ $deck->id }} }); open = false" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                        <x-icons.trash class="w-3 h-3 mr-2" />
+                                        <span>Remove from Shared</span>
+                                    </button>
+                                @endif
+                            </x-kebab-menu>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -116,4 +132,6 @@
     </div>
     @endif
     <livewire:delete-flashcard-modal />
+    <livewire:delete-deck-modal />
+    <livewire:remove-deck-sharing-modal />
 </div>

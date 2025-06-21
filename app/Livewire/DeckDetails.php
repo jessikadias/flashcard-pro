@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Deck;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class DeckDetails extends Component
 {
@@ -111,6 +112,7 @@ class DeckDetails extends Component
         }
     }
 
+    #[On('open-edit-modal')]
     public function openEditModal()
     {
         if (!$this->isOwner()) {
@@ -162,6 +164,38 @@ class DeckDetails extends Component
     public function isOwner(): bool
     {
         return $this->deck && $this->deck->user_id === auth()->id();
+    }
+
+    /**
+     * Check if the user has been shared the deck.
+     *
+     * @return bool
+     */
+    public function isSharedWith(): bool
+    {
+        return $this->deck && $this->deck->sharedWithUsers()->where('shared_with_user_id', auth()->id())->exists();
+    }
+
+    /**
+     * Remove deck sharing for the current user.
+     */
+    #[On('remove-deck-sharing')]
+    public function removeSharing()
+    {
+        if (!$this->isSharedWith()) {
+            session()->flash('error', 'You are not authorized to perform this action.');
+            return;
+        }
+
+        try {
+            $this->deck->sharedWithUsers()->where('shared_with_user_id', auth()->id())->detach();
+            session()->flash('success', 'Deck removed from your shared decks.');
+            
+            // Redirect to decks index since user no longer has access
+            return redirect()->route('decks.index');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to remove deck sharing.');
+        }
     }
 
     /**
