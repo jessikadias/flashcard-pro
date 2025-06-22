@@ -179,9 +179,14 @@ class DeckDetails extends Component
     /**
      * Remove deck sharing for the current user.
      */
-    #[On('remove-deck-sharing')]
-    public function removeSharing()
+    #[On('deckSharingRemoved')]
+    public function removeSharing($deckId = null)
     {
+        // If deckId is provided, check if it matches current deck
+        if ($deckId && $deckId !== $this->deck->id) {
+            return;
+        }
+
         if (!$this->isSharedWith()) {
             session()->flash('error', 'You are not authorized to perform this action.');
             return;
@@ -195,6 +200,36 @@ class DeckDetails extends Component
             return redirect()->route('decks.index');
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to remove deck sharing.');
+        }
+    }
+
+    /**
+     * Handle flashcard deletion.
+     */
+    #[On('flashcardDeleted')]
+    public function handleFlashcardDeleted(int $flashcardId)
+    {
+        if (!$this->isOwner()) {
+            session()->flash('error', 'You are not authorized to perform this action.');
+            return;
+        }
+
+        try {
+            $flashcard = $this->deck->flashcards()->find($flashcardId);
+            
+            if (!$flashcard) {
+                session()->flash('error', 'Flashcard not found.');
+                return;
+            }
+
+            $flashcard->delete();
+            
+            // Reload flashcards to update the view
+            $this->loadFlashcards();
+            
+            session()->flash('success', 'Flashcard deleted successfully!');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to delete flashcard.');
         }
     }
 

@@ -37,14 +37,23 @@
 
             <!-- Action Buttons Area -->
             <div class="@if($this->isOwner()) grid grid-cols-2 gap-4 sm:flex sm:space-x-4 @else flex @endif justify-center">
-                <x-button class="w-full justify-center sm:w-48 !p-4" size="md" fontWeight="font-bold">
-                    <div class="flex flex-col items-center space-y-2">
-                        <x-icons.play class="w-6 h-6"/>
-                        <span>Study Deck</span>
+                @if($deck->getFlashcardsCount() > 0)
+                    <x-button href="{{ route('decks.study', $deck) }}" class="w-full justify-center @if($this->isOwner()) @endif !p-4" size="md" fontWeight="font-bold">
+                        <div class="flex flex-col items-center space-y-2">
+                            <x-icons.play class="w-6 h-6"/>
+                            <span>Study Deck</span>
+                        </div>
+                    </x-button>
+                @else
+                    <div class="w-full @if($this->isOwner()) @endif !p-4 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed flex items-center justify-center" title="No cards to study">
+                        <div class="flex flex-col items-center space-y-2">
+                            <x-icons.play class="w-6 h-6"/>
+                            <span class="font-bold">Study Deck</span>
+                        </div>
                     </div>
-                </x-button>
+                @endif
                 @if ($this->isOwner())
-                    <x-button variant="secondary" href="{{ route('flashcards.edit', ['deck' => $deck]) }}" class="w-full justify-center sm:w-48 !p-4" size="md" fontWeight="font-semibold">
+                    <x-button variant="secondary" href="{{ route('flashcards.edit', ['deck' => $deck]) }}" class="w-full justify-center !p-4" size="md" fontWeight="font-semibold">
                         <div class="flex flex-col items-center space-y-2">
                             <x-icons.plus-circle class="w-6 h-6"/>
                             <span>New Card</span>
