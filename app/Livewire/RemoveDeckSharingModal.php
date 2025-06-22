@@ -49,8 +49,9 @@ class RemoveDeckSharingModal extends Component
             return;
         }
 
-        // Dispatch the event to the parent component
-        $this->dispatch('remove-deck-sharing');
+        // Dispatch single event for deck sharing removal
+        $this->dispatch('deckSharingRemoved', $this->deckId);
+        
         $this->closeModal();
     }
 

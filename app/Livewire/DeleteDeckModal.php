@@ -42,9 +42,11 @@ class DeleteDeckModal extends Component
 
             session()->flash('success', "Deck '{$deckName}' has been deleted successfully.");
             
-            // Dispatch event to parent to refresh the list
-            $this->dispatch('deckDeleted');
+            // Close modal first
             $this->close();
+            
+            // Redirect to deck list
+            return redirect()->route('decks.index');
 
         } catch (\Exception $e) {
             \Log::error('Failed to delete deck', ['error' => $e->getMessage()]);
