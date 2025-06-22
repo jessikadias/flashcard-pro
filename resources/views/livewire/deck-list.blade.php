@@ -25,25 +25,42 @@
     <div class="max-w-xl mx-auto space-y-2 px-4 py-2 -mt-8">
         @forelse($decks as $deck)
             <div wire:key="deck-{{ $deck->id }}" class="flex items-center bg-white rounded-xl shadow-lg p-5 transition-all duration-200 hover:shadow-xl hover:bg-gray-50">
-                <a href="{{ route('decks.edit', ['deck' => $deck]) }}" class="flex-1 min-w-0 flex items-center cursor-pointer">
-                    <div class="bg-[#f3f6fa] rounded-lg p-3 mr-4 flex items-center justify-center">
-                        <x-icons.deck class="text-[#244164]" />
+                @if($deck->flashcards_count > 0)
+                    <a href="{{ route('decks.study', $deck) }}" class="flex-shrink-0 mr-4">
+                        <div class="bg-[#f3f6fa] rounded-lg p-3 flex items-center justify-center hover:bg-[#e8edf5] transition-colors">
+                            <x-icons.play class="text-[#244164]" />
+                        </div>
+                    </a>
+                @else
+                    <div class="flex-shrink-0 mr-4">
+                        <div class="bg-gray-100 rounded-lg p-3 flex items-center justify-center">
+                            <x-icons.play class="text-gray-400" />
+                        </div>
                     </div>
+                @endif
+                
+                <a href="{{ route('decks.edit', $deck) }}" class="flex-1 min-w-0 flex items-center cursor-pointer">
                     <div class="flex-1 min-w-0">
                         <div class="text-xl font-bold text-gray-700 truncate">{{ $deck->name }}</div>
-                        <div class="text-gray-500 text-base">{{ $deck->flashcards_count }} cards</div>
+                        <div class="text-gray-500 text-base">
+                            {{ $deck->flashcards_count }} cards
+                            @if(!$this->isOwner($deck))
+                                • Shared by {{ $deck->user->name }}
+                            @endif
+                        </div>
                     </div>
                 </a>
                
-                <div class="flex items-center ml-4">
-                    <a href="{{ route('decks.study', $deck) }}" class="rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
-                        <x-icons.play class="text-[#244164] hover:text-[#223464] cursor-pointer" />
-                    </a>
-                    @if($this->canEdit($deck))
+                <div class="flex items-center ml-4 space-x-2">
+                    @if($this->isOwner($deck))
                         <button wire:click.prevent="$dispatch('openShareDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
                             <x-icons.share class="text-[#244164] hover:text-[#223464] cursor-pointer" />
                         </button>
                         <button wire:click.prevent="$dispatch('openDeleteDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
+                            <x-icons.trash class="text-[#244164] hover:text-[#223464] cursor-pointer" />
+                        </button>
+                    @else
+                        <button wire:click.prevent="$dispatch('openRemoveDeckSharingModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
                             <x-icons.trash class="text-[#244164] hover:text-[#223464] cursor-pointer" />
                         </button>
                     @endif
@@ -61,6 +78,7 @@
     <livewire:create-deck-modal />
     <livewire:share-deck-modal />
     <livewire:delete-deck-modal />
+    <livewire:remove-deck-sharing-modal />
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

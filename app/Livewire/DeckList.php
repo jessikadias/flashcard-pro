@@ -26,7 +26,10 @@ class DeckList extends Component
      */
     protected string $paginationTheme = 'tailwind';
 
-    protected $listeners = ['deckDeleted' => '$refresh'];
+    protected $listeners = [
+        'deckDeleted' => '$refresh',
+        'deckSharingRemoved' => 'handleDeckSharingRemoved',
+    ];
 
     /**
      * Render the component
@@ -72,11 +75,11 @@ class DeckList extends Component
     }
 
     /**
-     * Check if user can edit a specific deck
+     * Check if user is the owner of a specific deck
      */
-    public function canEdit(Deck $deck): bool
+    public function isOwner(Deck $deck): bool
     {
-        return $deck->canEdit(auth()->user());
+        return $deck->user_id === auth()->id();
     }
 
     /**
@@ -85,5 +88,45 @@ class DeckList extends Component
     public function loadMore()
     {
         $this->perPage += 10;
+    }
+
+    /**
+     * Handle deck sharing removal.
+     */
+    public function handleDeckSharingRemoved($deckId = null)
+    {
+        if (!$deckId) {
+            return;
+        }
+
+        try {
+            $deck = \App\Models\Deck::find($deckId);
+            
+            if (!$deck) {
+                session()->flash('error', 'Deck not found.');
+                return;
+            }
+
+            // Check if user has access to this deck (is shared with them)
+            $isSharedWith = $deck->sharedWithUsers()
+                                ->where('shared_with_user_id', auth()->id())
+                                ->exists();
+
+            if (!$isSharedWith) {
+                session()->flash('error', 'You are not authorized to perform this action.');
+                return;
+            }
+
+            // Remove the sharing relationship
+            $deck->sharedWithUsers()->where('shared_with_user_id', auth()->id())->detach();
+            
+            session()->flash('success', 'Deck removed from your shared decks.');
+            
+            // Refresh the component to update the deck list
+            $this->dispatch('$refresh');
+            
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to remove deck sharing.');
+        }
     }
 } 
