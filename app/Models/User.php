@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'onboarding_completed'
     ];
 
     protected $hidden = [
@@ -33,6 +34,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'onboarding_completed' => 'boolean',
         ];
     }
 
@@ -89,5 +91,10 @@ class User extends Authenticatable
     public function getTotalFlashcardCountAttribute(): int
     {
         return $this->decks()->withCount('flashcards')->get()->sum('flashcards_count');
+    }
+
+    public function hasCompletedOnboarding(): bool
+    {
+        return $this->onboarding_completed;
     }
 } 
