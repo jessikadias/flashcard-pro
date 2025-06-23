@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -21,12 +22,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'onboarding_completed'
+        'onboarding_completed',
+        'api_token'
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token',
     ];
 
     protected function casts(): array
@@ -96,5 +99,25 @@ class User extends Authenticatable
     public function hasCompletedOnboarding(): bool
     {
         return $this->onboarding_completed;
+    }
+
+    /**
+     * Generate a new API token for the user.
+     */
+    public function generateApiToken(): string
+    {
+        $this->api_token = Str::random(80);
+        $this->save();
+        
+        return $this->api_token;
+    }
+
+    /**
+     * Revoke the user's API token.
+     */
+    public function revokeApiToken(): void
+    {
+        $this->api_token = null;
+        $this->save();
     }
 } 
