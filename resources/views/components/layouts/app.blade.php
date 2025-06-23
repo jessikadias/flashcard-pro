@@ -35,6 +35,12 @@
             </main>
         </div>
         
+        <!-- Onboarding Tutorial -->
+        @if (auth()->check() && !auth()->user()->hasCompletedOnboarding())
+            <div id="onboarding-tutorial"></div>
+        @endif
+        <livewire:onboarding-manager />
+        
         @livewireScripts
     </body>
 </html> 

@@ -1,7 +1,15 @@
 import './bootstrap';
+import '../css/app.css';
 
-import Alpine from 'alpinejs';
+import { createApp } from 'vue';
 
-window.Alpine = Alpine;
+// Create Vue app for Onboarding
+const onboardingElement = document.getElementById('onboarding-tutorial');
+if (onboardingElement) {
+    // Import the OnboardingTutorial component only when needed
+    import('./onboarding/OnboardingTutorial.vue').then(({ default: OnboardingTutorial }) => {
+        const onboardingApp = createApp(OnboardingTutorial);
 
-Alpine.start();
+        onboardingApp.mount('#onboarding-tutorial');
+    });
+}
