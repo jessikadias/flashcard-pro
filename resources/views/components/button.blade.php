@@ -17,10 +17,10 @@ $sizeClasses = match ($size) {
 };
 
 $variantClasses = match ($variant) {
-    'primary' => 'bg-[#315A92] text-white hover:bg-[#223464]',
-    'secondary' => 'bg-[#EBF0F6] text-[#315A92] hover:bg-[#DCE4ED]',
-    'header' => 'bg-[#315A92] text-white hover:bg-[#f3f6fa] hover:text-gray-900',
-    default => 'bg-[#315A92] text-white hover:bg-[#223464]',
+    'primary' => 'bg-primary-500 text-white hover:bg-primary-800',
+    'secondary' => 'bg-primary-300 text-primary-500 hover:bg-primary-200',
+    'header' => 'bg-primary-500 text-white hover:bg-primary-50 hover:text-gray-900',
+    default => 'bg-primary-500 text-white hover:bg-primary-800',
 };
 
 $classes = $baseClasses . ' ' . $sizeClasses . ' ' . $variantClasses . ' ' . $fontWeight;

@@ -1,5 +1,5 @@
 <div>
-    <div class="min-h-screen bg-[#f3f6fa] p-4 sm:p-6 md:p-8">
+    <div class="min-h-screen bg-primary-50 p-4 sm:p-6 md:p-8">
         <div class="max-w-xl mx-auto">
             <!-- Header: Back Arrow and Title -->
             <div class="flex items-center space-x-4 mb-8">
@@ -37,7 +37,7 @@
 
             <!-- Action Buttons Area -->
             <div class="@if($this->isOwner()) grid grid-cols-2 gap-4 sm:flex sm:space-x-4 @else flex @endif justify-center">
-                @if($deck->getFlashcardsCount() > 0)
+                @if($deck->flashcards->count() > 0)
                     <x-button href="{{ route('decks.study', $deck) }}" class="w-full justify-center @if($this->isOwner()) @endif !p-4" size="md" fontWeight="font-bold">
                         <div class="flex flex-col items-center space-y-2">
                             <x-icons.play class="w-6 h-6"/>
@@ -78,7 +78,7 @@
                                 @if ($this->isOwner())
                                 <div class="ml-4">
                                     <button wire:click.prevent="$dispatch('openDeleteFlashcardModal', { flashcardId: {{ $card->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-gray-100">
-                                        <x-icons.trash class="text-[#244164] hover:text-[#223464]" />
+                                        <x-icons.trash class="text-primary-700 hover:text-primary-800" />
                                     </button>
                                 </div>
                                 @endif

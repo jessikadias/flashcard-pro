@@ -26,7 +26,7 @@ defineProps({ step: Object, isLastStep: Boolean })
                 </div>
             </template>
             <template v-else-if="isLastStep">
-                <SparklesIcon class="w-24 h-24 text-[#223464] opacity-80 mx-auto" />
+                <SparklesIcon class="w-24 h-24 text-primary-800 opacity-80 mx-auto" />
             </template>
             <!-- Se não houver imagem nem for o último step, o espaço fica vazio -->
         </div>

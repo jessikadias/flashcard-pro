@@ -1,10 +1,10 @@
-<div class="min-h-screen bg-[#f3f6fa]">
+<div class="min-h-screen bg-primary-50">
     <!-- Top blue section -->
-    <div class="bg-[#223464] pb-12 pt-9 px-4">
+    <div class="bg-primary-800 pb-12 pt-9 px-4">
         <div class="max-w-xl mx-auto">
             <h1 class="text-3xl font-bold text-white text-center mb-6">My Decks</h1>
             <div class="flex justify-center">
-                <div class="flex items-center bg-[#2d437c] rounded-lg px-4 py-0.5 w-48 mr-2.5 shadow">
+                <div class="flex items-center bg-primary-600 rounded-lg px-4 py-0.5 w-48 mr-2.5 shadow">
                     <x-icons.search class="text-gray-300 mr-2" />
                     <input
                         wire:model.live.debounce.300ms="search"
@@ -27,8 +27,8 @@
             <div wire:key="deck-{{ $deck->id }}" class="flex items-center bg-white rounded-xl shadow-lg p-5 transition-all duration-200 hover:shadow-xl hover:bg-gray-50">
                 @if($deck->flashcards_count > 0)
                     <a href="{{ route('decks.study', $deck) }}" class="flex-shrink-0 mr-4">
-                        <div class="bg-[#f3f6fa] rounded-lg p-3 flex items-center justify-center hover:bg-[#e8edf5] transition-colors">
-                            <x-icons.play class="text-[#244164]" />
+                        <div class="bg-primary-50 rounded-lg p-3 flex items-center justify-center hover:bg-primary-100 transition-colors">
+                            <x-icons.play class="text-primary-700" />
                         </div>
                     </a>
                 @else
@@ -53,15 +53,15 @@
                
                 <div class="flex items-center ml-4 space-x-2">
                     @if($this->isOwner($deck))
-                        <button wire:click.prevent="$dispatch('openShareDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
-                            <x-icons.share class="text-[#244164] hover:text-[#223464] cursor-pointer" />
+                        <button wire:click.prevent="$dispatch('openShareDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-primary-50">
+                            <x-icons.share class="text-primary-700 hover:text-primary-800 cursor-pointer" />
                         </button>
-                        <button wire:click.prevent="$dispatch('openDeleteDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
-                            <x-icons.trash class="text-[#244164] hover:text-[#223464] cursor-pointer" />
+                        <button wire:click.prevent="$dispatch('openDeleteDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-primary-50">
+                            <x-icons.trash class="text-primary-700 hover:text-primary-800 cursor-pointer" />
                         </button>
                     @else
-                        <button wire:click.prevent="$dispatch('openRemoveDeckSharingModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-[#f3f6fa]">
-                            <x-icons.trash class="text-[#244164] hover:text-[#223464] cursor-pointer" />
+                        <button wire:click.prevent="$dispatch('openRemoveDeckSharingModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-primary-50">
+                            <x-icons.trash class="text-primary-700 hover:text-primary-800 cursor-pointer" />
                         </button>
                     @endif
                 </div>

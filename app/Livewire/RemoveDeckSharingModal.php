@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Deck;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -22,12 +23,20 @@ class RemoveDeckSharingModal extends Component
     public ?int $deckId = null;
 
     /**
+     * The deck instance.
+     *
+     * @var Deck|null
+     */
+    public ?Deck $deck = null;
+
+    /**
      * Listen for the openRemoveDeckSharingModal event.
      */
     #[On('openRemoveDeckSharingModal')]
     public function openModal($deckId)
     {
         $this->deckId = $deckId;
+        $this->deck = Deck::find($deckId);
         $this->showModal = true;
     }
 
@@ -38,6 +47,7 @@ class RemoveDeckSharingModal extends Component
     {
         $this->showModal = false;
         $this->deckId = null;
+        $this->deck = null;
     }
 
     /**

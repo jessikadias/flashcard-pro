@@ -11,7 +11,7 @@
                         <span>{{ $currentCardIndex + 1 }} of {{ $totalCards }}</span>
                     </div>
                     <div class="w-full bg-white rounded-full h-1.5 mt-2">
-                        <div class="bg-[#315A92] h-1.5 rounded-full" style="width: {{ $this->getProgressPercentage() }}%"></div>
+                        <div class="bg-primary-500 h-1.5 rounded-full" style="width: {{ $this->getProgressPercentage() }}%"></div>
                     </div>
                 </div>
 
@@ -45,7 +45,7 @@
                     @else
                         <div class="flex justify-center space-x-3">
                             <x-button wire:click="markIncorrect" variant="secondary" class="w-full !h-20 !rounded-xl">
-                                <x-icons.thumbs-down class="w-8 h-8 text-[#315A92]" />
+                                <x-icons.thumbs-down class="w-8 h-8 text-primary-500" />
                             </x-button>
                             <x-button wire:click="markCorrect" variant="primary" class="w-full !h-20 !rounded-xl">
                                 <x-icons.thumbs-up class="w-8 h-8 text-white" />

@@ -1,5 +1,5 @@
 <div>
-    <div class="min-h-screen bg-[#f3f6fa] p-4 sm:p-6 md:p-8">
+    <div class="min-h-screen bg-primary-50 p-4 sm:p-6 md:p-8">
         <div class="max-w-xl mx-auto">
             <!-- Header: Back Arrow and Title -->
             <div class="flex items-center space-x-4 mb-8">
