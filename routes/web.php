@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DeckController;
 use App\Livewire\DeckList;
 use App\Livewire\DeckDetails;
 
