@@ -26,7 +26,7 @@ class ShareDeckModal extends Component
                     }
                 },
                 function ($attribute, $value, $fail) {
-                    if ($this->deck && User::where('email', $value)->first()->id === $this->deck->user_id) {
+                    if ($this->deck && User::where('email', $value)->first()?->id === $this->deck->user_id) {
                         $fail('You cannot share the deck with its owner.');
                     }
                 },
@@ -65,15 +65,19 @@ class ShareDeckModal extends Component
         try {
             $targetUser = User::where('email', $this->shareEmail)->first();
             
+            if (!$targetUser) {
+                session()->flash('error', 'User not found.');
+                return;
+            }
+            
             $this->deck->sharedWithUsers()->attach($targetUser->id, [
                 'user_id' => auth()->id()
             ]);
             
-            session()->flash('success', "Deck '{$this->deck->name}' has been shared with {$this->shareEmail}.");
+            session()->flash('success', "Deck '{$this->deck->name}' has been shared with {$this->shareEmail}.");            
             $this->close();
 
         } catch (\Exception $e) {
-            \Log::error('Failed to share deck', ['error' => $e->getMessage()]);
             session()->flash('error', 'Failed to share deck. Please try again.');
         }
     }
