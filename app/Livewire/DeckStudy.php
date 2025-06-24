@@ -6,7 +6,7 @@ use App\Models\Deck;
 use Livewire\Component;
 use Illuminate\Support\Collection;
 
-class StudyDeck extends Component
+class DeckStudy extends Component
 {
     /**
      * The deck being studied.
@@ -233,6 +233,6 @@ class StudyDeck extends Component
             abort(403);
         }
 
-        return view('livewire.study-deck');
+        return view('livewire.deck-study');
     }
 }

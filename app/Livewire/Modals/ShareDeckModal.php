@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modals;
 
 use App\Models\Deck;
 use App\Models\User;
@@ -80,6 +80,6 @@ class ShareDeckModal extends Component
 
     public function render()
     {
-        return view('livewire.share-deck-modal');
+        return view('livewire.modals.share-deck-modal');
     }
 }

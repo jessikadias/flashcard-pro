@@ -75,10 +75,10 @@
         Loading more decks...
     </div>
 
-    <livewire:create-deck-modal />
-    <livewire:share-deck-modal />
-    <livewire:delete-deck-modal />
-    <livewire:remove-deck-sharing-modal />
+    <livewire:modals.create-deck-modal />
+    <livewire:modals.share-deck-modal />
+    <livewire:modals.delete-deck-modal />
+    <livewire:modals.remove-deck-sharing-modal />
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

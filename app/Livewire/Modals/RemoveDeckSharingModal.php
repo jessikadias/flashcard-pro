@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modals;
 
 use App\Models\Deck;
 use Livewire\Component;
@@ -72,6 +72,6 @@ class RemoveDeckSharingModal extends Component
      */
     public function render()
     {
-        return view('livewire.remove-deck-sharing-modal');
+        return view('livewire.modals.remove-deck-sharing-modal');
     }
 }

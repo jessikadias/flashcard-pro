@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class OnboardingManager extends Component
+class OnboardingTutorial extends Component
 {
 
     public bool $showOnboarding = false;
@@ -40,6 +40,6 @@ class OnboardingManager extends Component
     /* Render component */
     public function render()
     {
-        return view('livewire.onboarding-manager');
+        return view('livewire.onboarding-tutorial');
     }
 } 

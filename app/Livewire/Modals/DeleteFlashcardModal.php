@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modals;
 
 use App\Models\Flashcard;
 use Livewire\Component;
@@ -34,6 +34,6 @@ class DeleteFlashcardModal extends Component
 
     public function render()
     {
-        return view('livewire.delete-flashcard-modal');
+        return view('livewire.modals.delete-flashcard-modal');
     }
 }

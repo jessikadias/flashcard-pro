@@ -168,7 +168,7 @@
         </div>
     </div>
     @endif
-    <livewire:delete-flashcard-modal />
-    <livewire:delete-deck-modal />
-    <livewire:remove-deck-sharing-modal />
+    <livewire:modals.delete-flashcard-modal />
+    <livewire:modals.delete-deck-modal />
+    <livewire:modals.remove-deck-sharing-modal />
 </div>

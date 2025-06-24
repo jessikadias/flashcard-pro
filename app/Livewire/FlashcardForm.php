@@ -7,7 +7,7 @@ use App\Models\Flashcard as FlashcardModel;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
-class Flashcard extends Component
+class FlashcardForm extends Component
 {
     /**
      * The deck.
@@ -118,6 +118,6 @@ class Flashcard extends Component
      */
     public function render()
     {
-        return view('livewire.flashcard');
+        return view('livewire.flashcard-form');
     }
 }

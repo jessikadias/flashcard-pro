@@ -49,5 +49,5 @@
             </div>
         </div>
     </div>
-    <livewire:delete-flashcard-modal />
+    <livewire:modals.delete-flashcard-modal />
 </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Modals;
 
 use Livewire\Component;
 
@@ -103,6 +103,6 @@ class CreateDeckModal extends Component
      */
     public function render()
     {
-        return view('livewire.create-deck-modal');
+        return view('livewire.modals.create-deck-modal');
     }
 }
