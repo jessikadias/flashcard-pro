@@ -8,12 +8,7 @@ use App\Livewire\DeckDetails;
 // Welcome route
 Route::get('/', function () {
     return view('welcome');
-});
-
-// Dashboard route
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->name('home');
 
 // Profile routes
 Route::middleware('auth')->group(function () {
