@@ -15,15 +15,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
+        <div class="min-h-screen bg-primary-50">
+            <!-- Top blue section with logo -->
+            <div class="bg-primary-800 pb-16 pt-4 px-4">
+                <div class="max-w-md mx-auto text-center">
+                    <a href="/">
+                        <img src="{{ asset('images/flashcardpro-logo.png') }}" alt="FlashCard Pro Logo" class="w-20 h-26 mx-auto">
+                    </a>
+                    <h1 class="text-2xl font-bold text-white">Welcome to FlashCard Pro</h1>
+                </div>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            <!-- Card content -->
+            <div class="max-w-md mx-auto px-4 -mt-8">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    {{ $slot }}
+                </div>
             </div>
         </div>
     </body>
