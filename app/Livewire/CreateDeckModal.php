@@ -17,6 +17,11 @@ class CreateDeckModal extends Component
     public string $deckName = '';
 
     /**
+     * Deck visibility (public/private)
+     */
+    public bool $isPublic = false;
+
+    /**
      * Validation rules
      */
     protected $rules = [
@@ -43,6 +48,7 @@ class CreateDeckModal extends Component
     public function open()
     {
         $this->deckName = '';
+        $this->isPublic = false;
         $this->show = true;
     }
 
@@ -53,6 +59,7 @@ class CreateDeckModal extends Component
     {
         $this->show = false;
         $this->deckName = '';
+        $this->isPublic = false;
         $this->resetValidation();
     }
 
@@ -66,6 +73,7 @@ class CreateDeckModal extends Component
         try {
             $deck = auth()->user()->decks()->create([
                 'name' => $this->deckName,
+                'is_public' => $this->isPublic,
             ]);
             
             // Emit event to parent component

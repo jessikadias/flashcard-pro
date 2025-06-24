@@ -16,7 +16,7 @@
                                 @if ($this->isOwner())
                                     <button @click="$dispatch('open-edit-modal'); open = false" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                                         <x-icons.pencil class="w-3 h-3 mr-2" />
-                                        <span>Edit Deck Title</span>
+                                        <span>Edit Deck</span>
                                     </button>
 
                                     <button @click="$dispatch('openDeleteDeckModal', { deckId: {{ $deck->id }} }); open = false" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
@@ -115,23 +115,51 @@
     </div>
 
     @if($showEditModal)
-    <!-- Edit Title Modal -->
+    <!-- Edit Deck Modal -->
     <div class="px-4 fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-30" wire:click="closeEditModal">
         <div wire:click.stop class="relative bg-white rounded-lg p-6 shadow-xl w-full max-w-md">
             <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
-                Edit Deck Title
+                Edit Deck
             </h3>
-            <div>
+            
+            <!-- Deck Name -->
+            <div class="mb-4">
+                <label for="deck-name" class="block text-sm font-medium text-gray-700 mb-2">Deck Name</label>
                 <input type="text"
+                       id="deck-name"
                        wire:model.defer="name"
-                       wire:keydown.enter="updateTitle"
+                       wire:keydown.enter="updateDeck"
                        class="w-full border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                       placeholder="Enter new deck title">
+                       placeholder="Enter deck name">
                 @error('name') <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
             </div>
-            <div class="mt-6 sm:flex sm:flex-row-reverse">
-                <x-button wire:click="updateTitle" size="md" class="w-full sm:w-auto sm:ml-3">
-                    That's it!
+
+            <!-- Deck Visibility -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Deck Visibility</label>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex-1">
+                        <p class="text-sm text-gray-600">
+                            {{ $isPublic ? 'Public - Can be discovered by other users' : 'Private - Only visible to you and people you share it with' }}
+                        </p>
+                    </div>
+                    <div class="flex items-center ml-4">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" 
+                                   wire:model.live="isPublic"
+                                   class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                            <span class="ml-3 text-sm font-medium text-gray-900">
+                                {{ $isPublic ? 'Public' : 'Private' }}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sm:flex sm:flex-row-reverse">
+                <x-button wire:click="updateDeck" size="md" class="w-full sm:w-auto sm:ml-3">
+                    Save Changes
                 </x-button>
                 <x-button wire:click="closeEditModal" variant="secondary" size="md" class="w-full sm:w-auto mt-3 sm:mt-0">
                     Cancel

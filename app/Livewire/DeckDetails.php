@@ -15,6 +15,7 @@ class DeckDetails extends Component
      */
     public ?Deck $deck = null;
     public string $name = '';
+    public bool $isPublic = false;
 
     /**
      * Whether the edit modal is shown.
@@ -80,6 +81,7 @@ class DeckDetails extends Component
     {
         $this->deck = $deck;
         $this->name = $deck->name;
+        $this->isPublic = $deck->is_public;
         $this->loadFlashcards();
     }
 
@@ -119,6 +121,7 @@ class DeckDetails extends Component
             return;
         }
         $this->name = $this->deck->name; // Reset name to current deck name
+        $this->isPublic = $this->deck->is_public; // Reset public status to current deck status
         $this->showEditModal = true;
     }
 
@@ -131,9 +134,9 @@ class DeckDetails extends Component
     }
 
     /**
-     * Update the title of the deck.
+     * Update the deck details (name and visibility).
      */
-    public function updateTitle()
+    public function updateDeck()
     {
         if (!$this->isOwner()) {
             session()->flash('error', 'You are not authorized to perform this action.');
@@ -147,12 +150,15 @@ class DeckDetails extends Component
         $this->validate();
 
         try {
-            $this->deck->update(['name' => $this->name]);
+            $this->deck->update([
+                'name' => $this->name,
+                'is_public' => $this->isPublic
+            ]);
             $this->deck->refresh();
             $this->closeEditModal();
-            session()->flash('success', 'Deck title updated successfully!');
+            session()->flash('success', 'Deck updated successfully!');
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to update deck title.');
+            session()->flash('error', 'Failed to update deck.');
         }
     }
 
