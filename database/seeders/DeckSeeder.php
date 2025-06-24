@@ -18,7 +18,6 @@ class DeckSeeder extends Seeder
         $johnMathDeck = Deck::updateOrCreate(
             ['name' => 'Mathematics Fundamentals', 'user_id' => $john->id],
             [
-                'description' => 'Basic math concepts and formulas',
                 'is_public' => true,
             ]
         );
@@ -26,7 +25,6 @@ class DeckSeeder extends Seeder
         $johnHistoryDeck = Deck::updateOrCreate(
             ['name' => 'World History', 'user_id' => $john->id],
             [
-                'description' => 'Important historical events and dates',
                 'is_public' => false,
             ]
         );
@@ -35,7 +33,6 @@ class DeckSeeder extends Seeder
         $janeScienceDeck = Deck::updateOrCreate(
             ['name' => 'Biology Basics', 'user_id' => $jane->id],
             [
-                'description' => 'Introduction to biological concepts',
                 'is_public' => true,
             ]
         );
@@ -43,7 +40,6 @@ class DeckSeeder extends Seeder
         $janeLanguageDeck = Deck::updateOrCreate(
             ['name' => 'Spanish Vocabulary', 'user_id' => $jane->id],
             [
-                'description' => 'Essential Spanish words and phrases',
                 'is_public' => false,
             ]
         );
@@ -52,7 +48,6 @@ class DeckSeeder extends Seeder
         $bobProgrammingDeck = Deck::updateOrCreate(
             ['name' => 'Laravel Framework', 'user_id' => $bob->id],
             [
-                'description' => 'Laravel PHP framework concepts and best practices',
                 'is_public' => true,
             ]
         );

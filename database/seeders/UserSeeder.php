@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -15,6 +16,8 @@ class UserSeeder extends Seeder
             [
                 'name' => 'John Doe',
                 'password' => bcrypt('password'),
+                'onboarding_completed' => false,
+                'api_token' => Str::random(80),
             ]
         );
 
@@ -23,6 +26,8 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Jane Smith',
                 'password' => bcrypt('password'),
+                'onboarding_completed' => false,
+                'api_token' => Str::random(80),
             ]
         );
 
@@ -31,15 +36,19 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Bob Wilson',
                 'password' => bcrypt('password'),
+                'onboarding_completed' => false,
+                'api_token' => Str::random(80),
             ]
         );
 
-        // Create test user for development
+        // Create test user for development (new user experience)
         User::updateOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
                 'password' => bcrypt('password'),
+                'onboarding_completed' => false, // New user experience
+                'api_token' => Str::random(80),
             ]
         );
 
