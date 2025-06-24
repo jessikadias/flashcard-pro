@@ -44,15 +44,15 @@
                         <div class="text-xl font-bold text-gray-700 truncate">{{ $deck->name }}</div>
                         <div class="text-gray-500 text-base">
                             {{ $deck->flashcards_count }} cards
-                            @if(!$this->isOwner($deck))
+                            @cannot('edit', $deck)
                                 • Shared by {{ $deck->user->name }}
-                            @endif
+                            @endcannot
                         </div>
                     </div>
                 </a>
                
                 <div class="flex items-center ml-4 space-x-2">
-                    @if($this->isOwner($deck))
+                    @can('edit', $deck)
                         <button wire:click.prevent="$dispatch('openShareDeckModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-primary-50">
                             <x-icons.share class="text-primary-700 hover:text-primary-800 cursor-pointer" />
                         </button>
@@ -63,7 +63,7 @@
                         <button wire:click.prevent="$dispatch('openRemoveDeckSharingModal', { deckId: {{ $deck->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-primary-50">
                             <x-icons.trash class="text-primary-700 hover:text-primary-800 cursor-pointer" />
                         </button>
-                    @endif
+                    @endcan
                 </div>
             </div>
         @empty

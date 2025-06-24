@@ -11,7 +11,6 @@ use App\Models\Deck;
 use App\Models\Flashcard;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
 
 class DeckController extends Controller
 {
@@ -108,15 +107,15 @@ class DeckController extends Controller
     }
 
     /**
-     * Get flashcards from a specific deck.
+     * Get a specific deck.
      * 
      * @param Request $request
-     * @param int|string $deckId The ID of the deck to retrieve
+     * @param int $deckId
      * @return JsonResponse
      * 
      * @apiParam {Number} id Deck ID (URL parameter)
      */
-    public function get(Request $request, $deckId): JsonResponse
+    public function get(Request $request, int $deckId): JsonResponse
     {
         try {
             $deck = $this->getDeckOrFail($request, $deckId);
@@ -125,6 +124,14 @@ class DeckController extends Controller
             if ($deck instanceof JsonResponse) {
                 return $deck;
             }
+            
+            // Check if user has permission to view this deck
+            if (!$request->user()->can('view', $deck)) {
+                return response()->json([
+                    'error' => 'Forbidden',
+                    'message' => 'You do not have permission to view this deck',
+                ], 403);
+            }
 
             return response()->json([
                 'data' => new DeckResource($deck),
@@ -132,7 +139,7 @@ class DeckController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Server error',
-                'message' => 'An unexpected error occurred while fetching deck cards',
+                'message' => 'An unexpected error occurred while fetching the deck',
             ], 500);
         }
     }
@@ -141,7 +148,7 @@ class DeckController extends Controller
      * Update a deck.
      * 
      * @param UpdateDeckRequest $request
-     * @param int|string $deckId The ID of the deck to update
+     * @param int $deckId The ID of the deck to update
      * @return JsonResponse
      * 
      * @apiParam {Number} id Deck ID (URL parameter)
@@ -151,7 +158,7 @@ class DeckController extends Controller
      * @apiParam {String} cards.question Flashcard question (required, max 255 characters)
      * @apiParam {String} cards.answer Flashcard answer (required, max 255 characters)
      */
-    public function update(UpdateDeckRequest $request, $deckId): JsonResponse
+    public function update(UpdateDeckRequest $request, int $deckId): JsonResponse
     {
         try {
             $deck = $this->getDeckOrFail($request, $deckId);
@@ -159,6 +166,13 @@ class DeckController extends Controller
             // Return early if getDeckOrFail returned a JsonResponse (404 error)
             if ($deck instanceof JsonResponse) {
                 return $deck;
+            }
+
+            if (!$request->user()->can('edit', $deck)) {
+                return response()->json([
+                    'error' => 'Forbidden',
+                    'message' => 'You do not have permission to update this deck',
+                ], 403);
             }
 
             $validated = $request->getValidatedData();
@@ -190,7 +204,7 @@ class DeckController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Server error',
-                'message' => 'An unexpected error occurred while updating the deck.',
+                'message' => 'An unexpected error occurred while updating the deck',
             ], 500);
         }
     }
@@ -199,12 +213,12 @@ class DeckController extends Controller
      * Delete a deck or remove shared access.
      * 
      * @param Request $request
-     * @param int|string $deckId The ID of the deck to delete
+     * @param int $deckId The ID of the deck to delete
      * @return JsonResponse
      * 
      * @apiParam {Number} id Deck ID (URL parameter)
      */
-    public function destroy(Request $request, $deckId): JsonResponse
+    public function destroy(Request $request, int $deckId): JsonResponse
     {
         try {
             $deck = $this->getDeckOrFail($request, $deckId);
@@ -214,8 +228,8 @@ class DeckController extends Controller
                 return $deck;
             }
 
-            // Check if user is the owner
-            if ($deck->canEdit($request->user())) {
+            // Check if user can delete (is owner) or remove shared access
+            if ($request->user()->can('delete', $deck)) {
                 // User is owner - delete the entire deck
                 $deck->delete();
                 $message = 'Deck deleted successfully';
@@ -225,13 +239,11 @@ class DeckController extends Controller
                 $message = 'Deck removed from your collection successfully';
             }
 
-            return response()->json([
-                'message' => $message,
-            ]);
+            return response()->json(['message' => $message]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Server error',
-                'message' => 'An unexpected error occurred while deleting the deck',
+                'message' => 'An unexpected error occurred while processing the deck deletion',
             ], 500);
         }
     }
@@ -240,10 +252,10 @@ class DeckController extends Controller
      * Get deck or return 404 JSON response if not found/accessible.
      * 
      * @param Request $request
-     * @param int|string $deckId
+     * @param int $deckId
      * @return Deck|JsonResponse
      */
-    private function getDeckOrFail(Request $request, $deckId)
+    private function getDeckOrFail(Request $request, int $deckId)
     {
         $deck = $request->user()->accessibleDecks()->where('id', $deckId)->first();
 

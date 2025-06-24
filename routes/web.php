@@ -26,9 +26,19 @@ Route::middleware('auth')->group(function () {
 // Deck routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/decks', DeckList::class)->name('decks.index');
-    Route::get('/decks/{deck}/edit', DeckDetails::class)->name('decks.edit');
-    Route::get('/decks/{deck}/flashcards/{flashcardId?}', \App\Livewire\FlashcardForm::class)->name('flashcards.edit');
-    Route::get('/decks/{deck}/study', \App\Livewire\DeckStudy::class)->name('decks.study');
+
+    // Routes protected by deck policy
+    Route::get('/decks/{deck}', DeckDetails::class)
+        ->middleware('can:view,deck')
+        ->name('decks.edit');
+        
+    Route::get('/decks/{deck}/flashcards/{flashcardId?}', \App\Livewire\FlashcardForm::class)
+        ->middleware('can:view,deck')
+        ->name('flashcards.edit');
+        
+    Route::get('/decks/{deck}/study', \App\Livewire\DeckStudy::class)
+        ->middleware('can:view,deck')
+        ->name('decks.study');
 });
 
 require __DIR__.'/auth.php';

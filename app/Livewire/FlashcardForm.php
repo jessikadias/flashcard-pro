@@ -59,7 +59,7 @@ class FlashcardForm extends Component
      */
     public function save()
     {
-        if (!$this->isOwner()) {
+        if (!auth()->user()->can('edit', $this->deck)) {
             session()->flash('error', 'You are not authorized to perform this action.');
             return;
         }
@@ -95,7 +95,7 @@ class FlashcardForm extends Component
     #[On('flashcardDeleted')]
     public function delete()
     {
-        if (!$this->flashcard || !$this->isOwner()) {
+        if (!$this->flashcard || !auth()->user()->can('edit', $this->deck)) {
             session()->flash('error', 'You are not authorized to perform this action.');
             return;
         }
@@ -104,11 +104,6 @@ class FlashcardForm extends Component
 
         session()->flash('success', 'Flashcard deleted successfully!');
         return redirect()->route('decks.edit', $this->deck);
-    }
-
-    public function isOwner(): bool
-    {
-        return $this->deck->user_id === auth()->id();
     }
 
     /**

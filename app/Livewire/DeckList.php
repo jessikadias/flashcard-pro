@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Deck;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -72,14 +71,6 @@ class DeckList extends Component
         $this->resetPage();
         $this->perPage = 10;
         $this->dispatch('searchUpdated');
-    }
-
-    /**
-     * Check if user is the owner of a specific deck
-     */
-    public function isOwner(Deck $deck): bool
-    {
-        return $deck->user_id === auth()->id();
     }
 
     /**

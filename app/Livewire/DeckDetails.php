@@ -117,9 +117,10 @@ class DeckDetails extends Component
     #[On('open-edit-modal')]
     public function openEditModal()
     {
-        if (!$this->isOwner()) {
+        if (!auth()->user()->can('edit', $this->deck)) {
             return;
         }
+
         $this->name = $this->deck->name; // Reset name to current deck name
         $this->isPublic = $this->deck->is_public; // Reset public status to current deck status
         $this->showEditModal = true;
@@ -137,13 +138,13 @@ class DeckDetails extends Component
      * Update the deck details (name and visibility).
      */
     public function updateDeck()
-    {
-        if (!$this->isOwner()) {
-            session()->flash('error', 'You are not authorized to perform this action.');
+    {      
+        if (!$this->deck) {
             return;
         }
 
-        if (!$this->deck) {
+        if (!auth()->user()->can('edit', $this->deck)) {
+            session()->flash('error', 'You are not authorized to perform this action.');
             return;
         }
 
@@ -160,16 +161,6 @@ class DeckDetails extends Component
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to update deck.');
         }
-    }
-
-    /**
-     * Check if the user is the owner of the deck.
-     *
-     * @return bool
-     */
-    public function isOwner(): bool
-    {
-        return $this->deck && $this->deck->user_id === auth()->id();
     }
 
     /**
@@ -215,7 +206,7 @@ class DeckDetails extends Component
     #[On('flashcardDeleted')]
     public function handleFlashcardDeleted(int $flashcardId)
     {
-        if (!$this->isOwner()) {
+        if (!auth()->user()->can('edit', $this->deck)) {
             session()->flash('error', 'You are not authorized to perform this action.');
             return;
         }

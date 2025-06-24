@@ -10,10 +10,10 @@
                 <div class="flex-grow flex items-center justify-between min-w-0">
                     <h1 class="text-3xl sm:text-2xl md:text-3xl text-gray-700 truncate min-w-0 flex-1 mr-4">{{ $deck->name }}</h1>
                     
-                    @if ($this->isOwner() || $this->isSharedWith())
+                    @can('view', $deck)
                         <div class="flex-shrink-0">
                             <x-kebab-menu>
-                                @if ($this->isOwner())
+                                @can('edit', $deck)
                                     <button @click="$dispatch('open-edit-modal'); open = false" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
                                         <x-icons.pencil class="w-3 h-3 mr-2" />
                                         <span>Edit Deck</span>
@@ -28,38 +28,38 @@
                                         <x-icons.trash class="w-3 h-3 mr-2" />
                                         <span>Remove from Shared</span>
                                     </button>
-                                @endif
+                                @endcan
                             </x-kebab-menu>
                         </div>
-                    @endif
+                    @endcan
                 </div>
             </div>
 
             <!-- Action Buttons Area -->
-            <div class="@if($this->isOwner()) grid grid-cols-2 gap-4 sm:flex sm:space-x-4 @else flex @endif justify-center">
+            <div class="@can('edit', $deck) grid grid-cols-2 gap-4 sm:flex sm:space-x-4 @else flex @endcan justify-center">
                 @if($deck->flashcards->count() > 0)
-                    <x-button href="{{ route('decks.study', $deck) }}" class="w-full justify-center @if($this->isOwner()) @endif !p-4" size="md" fontWeight="font-bold">
+                    <x-button href="{{ route('decks.study', $deck) }}" class="w-full justify-center @can('edit', $deck) @endcan !p-4" size="md" fontWeight="font-bold">
                         <div class="flex flex-col items-center space-y-2">
                             <x-icons.play class="w-6 h-6"/>
                             <span>Study Deck</span>
                         </div>
                     </x-button>
                 @else
-                    <div class="w-full @if($this->isOwner()) @endif !p-4 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed flex items-center justify-center" title="No cards to study">
+                    <div class="w-full @can('edit', $deck) @endcan !p-4 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed flex items-center justify-center" title="No cards to study">
                         <div class="flex flex-col items-center space-y-2">
                             <x-icons.play class="w-6 h-6"/>
                             <span class="font-bold">Study Deck</span>
                         </div>
                     </div>
                 @endif
-                @if ($this->isOwner())
+                @can('edit', $deck)
                     <x-button variant="secondary" href="{{ route('flashcards.edit', ['deck' => $deck]) }}" class="w-full justify-center !p-4" size="md" fontWeight="font-semibold">
                         <div class="flex flex-col items-center space-y-2">
                             <x-icons.plus-circle class="w-6 h-6"/>
                             <span>New Card</span>
                         </div>
                     </x-button>
-                @endif
+                @endcan
             </div>
 
             <!-- Cards Area -->
@@ -75,13 +75,13 @@
                                     <h3 class="font-bold text-gray-800 line-clamp-3">{{ $card->question }}</h3>
                                     <p class="text-gray-600 line-clamp-3 mt-1">{{ $card->answer }}</p>
                                 </div>
-                                @if ($this->isOwner())
+                                @can('edit', $deck)
                                 <div class="ml-4">
                                     <button wire:click.prevent="$dispatch('openDeleteFlashcardModal', { flashcardId: {{ $card->id }} })" type="button" class="p-2 rounded-lg transition-all duration-200 hover:bg-gray-100">
                                         <x-icons.trash class="text-primary-700 hover:text-primary-800" />
                                     </button>
                                 </div>
-                                @endif
+                                @endcan
                             </div>
                         </a>
                     @empty

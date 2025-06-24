@@ -25,9 +25,9 @@ Route::middleware(AuthenticateApiToken::class)->group(function () {
     // User Decks API - CRUD operations for decks
     Route::get('/decks', [DeckController::class, 'list']); // Get all user decks
     Route::post('/decks', [DeckController::class, 'create']); // Create new deck
-    Route::get('/decks/{deck}', [DeckController::class, 'get']); // Get specific deck
-    Route::put('/decks/{deck}', [DeckController::class, 'update']); // Update deck
-    Route::delete('/decks/{deck}', [DeckController::class, 'destroy']); // Delete deck
+    Route::get('/decks/{deckId}', [DeckController::class, 'get']); // Get specific deck
+    Route::put('/decks/{deckId}', [DeckController::class, 'update']); // Update deck
+    Route::delete('/decks/{deckId}', [DeckController::class, 'destroy']); // Delete deck
 
     // User info
     Route::get('/profile', function (Request $request) {

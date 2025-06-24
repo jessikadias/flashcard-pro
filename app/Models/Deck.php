@@ -94,22 +94,4 @@ class Deck extends Model
     {
         return $this->flashcards()->count();
     }
-
-    /**
-     * Check if the user can edit the deck.
-     */
-    public function canEdit(User $user): bool
-    {
-        return $this->user_id === $user->id;
-    }
-
-    /**
-     * Check if the user can view the deck.
-     */
-    public function canView(User $user): bool
-    {
-        return $this->user_id === $user->id ||
-               $this->is_public ||
-               $this->sharedWithUsers()->where('shared_with_user_id', $user->id)->exists();
-    }
 } 
