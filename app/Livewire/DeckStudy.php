@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Deck;
 use Livewire\Component;
 use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 
 class DeckStudy extends Component
 {
@@ -48,6 +49,11 @@ class DeckStudy extends Component
      * The total number of cards.
      */
     public int $totalCards = 0;
+
+    /**
+     * Study session order.
+     */
+    public string $studyOrder = 'sequential';
 
     /**
      * Study session statistics.
@@ -225,6 +231,15 @@ class DeckStudy extends Component
     }
 
     /**
+     * Get the page title.
+     */
+    #[Computed]
+    public function title()
+    {
+        return 'Study - ' . ($this->deck ? $this->deck->name : 'Deck');
+    }
+
+    /**
      * Render the component.
      */
     public function render()
@@ -232,7 +247,7 @@ class DeckStudy extends Component
         if (!$this->canAccess()) {
             abort(403);
         }
-
-        return view('livewire.deck-study');
+        
+        return view('livewire.deck-study')->layoutData(['title' => $this->title]);
     }
 }

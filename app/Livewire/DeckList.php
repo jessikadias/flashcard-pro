@@ -4,8 +4,10 @@ namespace App\Livewire;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Illuminate\Support\Collection;
 
+#[Title('My Decks')]
 class DeckList extends Component
 {
     use AuthorizesRequests;

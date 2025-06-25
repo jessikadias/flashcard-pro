@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Deck;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 
 class DeckDetails extends Component
 {
@@ -231,12 +232,21 @@ class DeckDetails extends Component
     }
 
     /**
+     * Get the page title.
+     */
+    #[Computed]
+    public function title()
+    {
+        return $this->deck ? $this->deck->name : 'Deck Details';
+    }
+
+    /**
      * Render the component.
      *
      * @return \Illuminate\View\View
      */
     public function render()
     {
-        return view('livewire.deck-details');
+        return view('livewire.deck-details')->layoutData(['title' => $this->title]);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Deck;
 use App\Models\Flashcard as FlashcardModel;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 
 class FlashcardForm extends Component
 {
@@ -102,12 +103,24 @@ class FlashcardForm extends Component
     }
 
     /**
+     * Get the page title.
+     */
+    #[Computed]
+    public function title()
+    {
+        if ($this->flashcard) {
+            return 'Edit Flashcard - ' . $this->deck->name;
+        }
+        return 'Add Flashcard - ' . $this->deck->name;
+    }
+
+    /**
      * Render the component.
      *
      * @return \Illuminate\View\View
      */
     public function render()
     {
-        return view('livewire.flashcard-form');
+        return view('livewire.flashcard-form')->layoutData(['title' => $this->title]);
     }
 }
