@@ -9,19 +9,19 @@ use Illuminate\Http\Request;
 // ALL API ROUTES (Protected by Custom Authentication Middleware)
 // =============================================================================
 
-Route::middleware(AuthenticateApiToken::class)->group(function () {
-    
-    // API Status/Health Check
-    Route::get('/status', function () {
-        return response()->json([
-            'status' => 'online',
-            'version' => '1.0.0',
-            'timestamp' => now()->toISOString(),
-            'environment' => app()->environment(),
-            'message' => 'API is operational',
-        ]);
-    });
+// API Status/Health Check
+Route::get('/status', function () {
+    return response()->json([
+        'status' => 'online',
+        'version' => '1.0.0',
+        'timestamp' => now()->toISOString(),
+        'environment' => app()->environment(),
+        'message' => 'API is operational',
+    ]);
+});
 
+Route::middleware(AuthenticateApiToken::class)->group(function () {  
+    
     // User Decks API - CRUD operations for decks
     Route::get('/decks', [DeckController::class, 'list']); // Get all user decks
     Route::post('/decks', [DeckController::class, 'create']); // Create new deck
