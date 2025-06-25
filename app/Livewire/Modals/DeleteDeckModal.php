@@ -49,7 +49,6 @@ class DeleteDeckModal extends Component
             return redirect()->route('decks.index');
 
         } catch (\Exception $e) {
-            \Log::error('Failed to delete deck', ['error' => $e->getMessage()]);
             session()->flash('error', 'Failed to delete deck. Please try again.');
         }
     }

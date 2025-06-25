@@ -22,7 +22,6 @@ class OnboardingTutorial extends Component
     /* Complete onboarding */
     public function completeOnboarding()
     {
-        \Log::info('Método completeOnboarding chamado!');
         /* Complete onboarding */
         if (auth()->check()) {
             $user = auth()->user();

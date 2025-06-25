@@ -64,11 +64,6 @@ class FlashcardForm extends Component
             return;
         }
 
-        logger()->info('Saving flashcard', [
-            'question' => $this->question,
-            'answer' => $this->answer,
-        ]);
-
         $this->validate([
             'question' => 'required|min:3',
             'answer' => 'required|min:1',
