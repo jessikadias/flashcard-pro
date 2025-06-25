@@ -14,7 +14,11 @@
                             </h3>
                             <div class="mt-2">
                             <p class="text-sm text-gray-500 mb-4">
-                                Enter the email address of the user you want to share "{{ $deck->name }}" with.
+                                @if($deck)
+                                    Enter the email address of the user you want to share "{{ $deck->name }}" with.
+                                @else
+                                    Please select a deck to share.
+                                @endif
                             </p>
                                 <div>
                                     <input 
