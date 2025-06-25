@@ -27,6 +27,9 @@
                 {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
             </p>
 
+            <!-- Hidden username field for accessibility -->
+            <input type="text" name="username" value="{{ $user->email }}" autocomplete="username" class="sr-only" />
+
             <div class="mt-6">
                 <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
 
@@ -34,6 +37,7 @@
                     id="password"
                     name="password"
                     type="password"
+                    autocomplete="current-password"
                     class="mt-1 block w-3/4"
                     placeholder="{{ __('Password') }}"
                 />
