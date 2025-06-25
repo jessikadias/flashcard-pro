@@ -25,7 +25,7 @@
     <div class="max-w-xl mx-auto space-y-2 px-4 py-2 -mt-8">
         @forelse($decks as $deck)
             <div wire:key="deck-{{ $deck->id }}" class="flex items-center bg-white rounded-xl shadow-lg p-5 transition-all duration-200 hover:shadow-xl hover:bg-gray-50">
-                @if($deck->flashcards_count > 0)
+                @if($deck->flashcard_count > 0)
                     <a href="{{ route('decks.study', $deck) }}" class="flex-shrink-0 mr-4">
                         <div class="bg-primary-50 rounded-lg p-3 flex items-center justify-center hover:bg-primary-100 transition-colors">
                             <x-icons.play class="text-primary-700" />
@@ -43,7 +43,7 @@
                     <div class="flex-1 min-w-0">
                         <div class="text-xl font-bold text-gray-700 truncate">{{ $deck->name }}</div>
                         <div class="text-gray-500 text-base">
-                            {{ $deck->flashcards_count }} cards
+                            {{ $deck->flashcard_count }} cards
                             @cannot('edit', $deck)
                                 • Shared by {{ $deck->user->name }}
                             @endcannot
@@ -67,7 +67,13 @@
                 </div>
             </div>
         @empty
-            <div class="text-center text-gray-400 py-12 text-lg">No decks found.</div>
+            <div class="text-center text-gray-400 py-12 text-lg">
+                @if(strlen($search) >= 3)
+                    No decks found matching "{{ $search }}".
+                @else
+                    No decks found.
+                @endif
+            </div>
         @endforelse
     </div>
 

@@ -14,44 +14,51 @@ class DeckSeeder extends Seeder
         $jane = User::where('email', 'jane@example.com')->first();
         $bob = User::where('email', 'bob@example.com')->first();
 
-        // Create decks for John
-        $johnMathDeck = Deck::updateOrCreate(
-            ['name' => 'Mathematics Fundamentals', 'user_id' => $john->id],
-            [
-                'is_public' => true,
-            ]
-        );
+        // Import deck data
+        $data = require __DIR__ . '/data/DeckData.php';
+        
+        $users = [
+            'john' => $john,
+            'jane' => $jane,
+            'bob' => $bob,
+        ];
 
-        $johnHistoryDeck = Deck::updateOrCreate(
-            ['name' => 'World History', 'user_id' => $john->id],
-            [
-                'is_public' => false,
-            ]
-        );
+        // Create a lookup array for decks by title
+        $deckLookup = [];
+        foreach ($data['decks'] as $deckData) {
+            $deckLookup[$deckData['title']] = $deckData;
+        }
 
-        // Create decks for Jane
-        $janeScienceDeck = Deck::updateOrCreate(
-            ['name' => 'Biology Basics', 'user_id' => $jane->id],
-            [
-                'is_public' => true,
-            ]
-        );
+        $totalDecks = 0;
+        $userDeckCounts = [];
 
-        $janeLanguageDeck = Deck::updateOrCreate(
-            ['name' => 'Spanish Vocabulary', 'user_id' => $jane->id],
-            [
-                'is_public' => false,
-            ]
-        );
+        // Create decks for each user
+        foreach ($data['user_decks'] as $userKey => $deckTitles) {
+            $user = $users[$userKey];
+            $userDeckCounts[$userKey] = count($deckTitles);
+            $totalDecks += count($deckTitles);
+            
+            foreach ($deckTitles as $deckTitle) {
+                if (!isset($deckLookup[$deckTitle])) {
+                    $this->command->warn("Deck '{$deckTitle}' not found in deck definitions, skipping");
+                    continue;
+                }
+                
+                $deckData = $deckLookup[$deckTitle];
+                
+                Deck::updateOrCreate(
+                    ['name' => $deckTitle, 'user_id' => $user->id],
+                    ['is_public' => $deckData['is_public']]
+                );
+            }
+        }
 
-        // Create decks for Bob
-        $bobProgrammingDeck = Deck::updateOrCreate(
-            ['name' => 'Laravel Framework', 'user_id' => $bob->id],
-            [
-                'is_public' => true,
-            ]
-        );
-
-        $this->command->info('Decks created/updated for all users');
+        $this->command->info(sprintf(
+            '%d decks created/updated across all users (John: %d, Jane: %d, Bob: %d)',
+            $totalDecks,
+            $userDeckCounts['john'],
+            $userDeckCounts['jane'],
+            $userDeckCounts['bob']
+        ));
     }
 } 

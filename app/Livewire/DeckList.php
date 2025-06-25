@@ -4,11 +4,11 @@ namespace App\Livewire;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Component;
-use Livewire\WithPagination;
+use Illuminate\Support\Collection;
 
 class DeckList extends Component
 {
-    use AuthorizesRequests, WithPagination;
+    use AuthorizesRequests;
 
     /**
      * Search term for filtering decks
@@ -16,40 +16,75 @@ class DeckList extends Component
     public string $search = '';
 
     /**
-     * Number of decks to show per page
+     * Number of decks to load per batch
      */
-    public int $perPage = 10;
+    public int $loadPerBatch = 10;
 
     /**
-     * Livewire pagination theme
+     * Current offset for loading decks
      */
-    protected string $paginationTheme = 'tailwind';
+    public int $currentOffset = 0;
+
+    /**
+     * Collection of loaded decks
+     */
+    public Collection $loadedDecks;
+
+    /**
+     * Whether there are more decks to load
+     */
+    public bool $hasMoreDecks = true;
+
+    /**
+     * Whether we're currently loading more decks
+     */
+    public bool $isLoading = false;
 
     protected $listeners = [
-        'deckDeleted' => '$refresh',
+        'deckDeleted' => 'handleDeckDeleted',
         'deckSharingRemoved' => 'handleDeckSharingRemoved',
+        'loadMoreDecks' => 'loadMore',
     ];
+
+    /**
+     * Initialize the component
+     */
+    public function mount()
+    {
+        $this->loadedDecks = collect();
+        $this->loadInitialDecks();
+    }
 
     /**
      * Render the component
      */
     public function render()
     {
-        $decks = $this->getFilteredDecks();
-
         return view('livewire.deck-list', [
-            'decks' => $decks,
+            'decks' => $this->loadedDecks,
         ]);
     }
 
     /**
-     * Get decks based on current filters and search
+     * Load initial batch of decks
      */
-    private function getFilteredDecks()
+    private function loadInitialDecks()
     {
-        $query = auth()->user()->accessibleDecks()
-            ->with(['user', 'flashcards'])
-            ->withCount('flashcards');
+        $this->currentOffset = 0;
+        $this->hasMoreDecks = true;
+        $decks = $this->fetchDecks($this->loadPerBatch, 0);
+        
+        $this->loadedDecks = $decks;
+        $this->currentOffset = $decks->count();
+        $this->hasMoreDecks = $decks->count() === $this->loadPerBatch;
+    }
+
+    /**
+     * Fetch decks from database
+     */
+    private function fetchDecks(int $limit, int $offset)
+    {
+        $query = auth()->user()->accessibleDecks()->with(['user', 'flashcards']);
 
         // Apply search filter only if 3 or more characters
         if (strlen($this->search) >= 3) {
@@ -59,17 +94,18 @@ class DeckList extends Component
             });
         }
         
-        $decks = $query->orderBy('name')->paginate($this->perPage);
-        return $decks;
+        return $query->orderBy('name')
+                    ->skip($offset)
+                    ->take($limit)
+                    ->get();
     }
 
     /**
-     * Update search and reset pagination
+     * Update search and reset decks
      */
     public function updatedSearch()
     {
-        $this->resetPage();
-        $this->perPage = 10;
+        $this->loadInitialDecks();
         $this->dispatch('searchUpdated');
     }
 
@@ -78,7 +114,37 @@ class DeckList extends Component
      */
     public function loadMore()
     {
-        $this->perPage += 10;
+        if (!$this->hasMoreDecks || $this->isLoading) {
+            return;
+        }
+
+        $this->isLoading = true;
+
+        $newDecks = $this->fetchDecks($this->loadPerBatch, $this->currentOffset);
+        
+        // Add new decks to the existing collection
+        $this->loadedDecks = $this->loadedDecks->concat($newDecks);
+        
+        // Update offset and check if there are more decks
+        $this->currentOffset += $newDecks->count();
+        $this->hasMoreDecks = $newDecks->count() === $this->loadPerBatch;
+        
+        $this->isLoading = false;
+    }
+
+    /**
+     * Handle deck deletion
+     */
+    public function handleDeckDeleted($deckId = null)
+    {
+        if ($deckId) {
+            $this->loadedDecks = $this->loadedDecks->reject(function ($deck) use ($deckId) {
+                return $deck->id === $deckId;
+            });
+        } else {
+            // Refresh all decks if no specific deck ID
+            $this->loadInitialDecks();
+        }
     }
 
     /**

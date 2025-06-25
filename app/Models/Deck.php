@@ -33,6 +33,13 @@ class Deck extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['flashcard_count'];
+
+    /**
      * The user that owns the deck.
      */
     public function user(): BelongsTo
