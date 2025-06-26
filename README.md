@@ -1,7 +1,8 @@
 # FlashCard Pro
 
 <div align="center">
-  <img src="public/images/flashcardpro-logo.png" alt="FlashCard Pro Logo" width="200" height="200">
+  <img src="public/images/flashcardpro-logo.png" alt="FlashCard Pro Logo" height="200">
+  <h1 style="color: #315A92">FlashCard Pro</h1>
 </div>
 
 ## Summary
