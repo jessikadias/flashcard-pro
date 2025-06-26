@@ -27,14 +27,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/decks/{deck}', DeckDetails::class)
         ->middleware('can:view,deck')
         ->name('decks.edit');
-        
+
     Route::get('/decks/{deck}/flashcards/{flashcardId?}', \App\Livewire\FlashcardForm::class)
         ->middleware('can:view,deck')
         ->name('flashcards.edit');
-        
+
     Route::get('/decks/{deck}/study', \App\Livewire\DeckStudy::class)
         ->middleware('can:view,deck')
         ->name('decks.study');
 });
+
+// Public deck study route (no authentication required)
+Route::get('/public/decks/{deck}/study', \App\Livewire\DeckStudy::class)
+    ->name('public.decks.study');
 
 require __DIR__.'/auth.php';

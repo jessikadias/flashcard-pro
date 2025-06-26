@@ -5,7 +5,7 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
                     Create New Deck
                 </h3>
-                
+
                 <div>
                     <label for="deckName" class="block text-sm font-medium text-gray-700 mb-2">
                         Deck Name
@@ -33,7 +33,7 @@
                         </div>
                         <div class="flex items-center ml-4">
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" 
+                                <input type="checkbox"
                                        wire:model.live="isPublic"
                                        class="sr-only peer">
                                 <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
@@ -45,6 +45,20 @@
                     </div>
                 </div>
 
+                @if($isPublic)
+                    <div class="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                            </svg>
+                            <div class="flex-1">
+                                <p class="text-sm text-blue-800 font-medium">Public URL</p>
+                                <p class="text-xs text-blue-700 mt-1">After creating this deck, it will be accessible at a public URL that anyone can use to study.</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 @if($this->isAIAvailable())
                 <!-- AI Generation Section -->
                 <div class="mt-4">
@@ -53,7 +67,7 @@
                             Generate with AI
                         </label>
                         <div class="flex items-center">
-                            <input type="checkbox" 
+                            <input type="checkbox"
                                    wire:model.live="useAI"
                                    id="useAI"
                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
@@ -83,7 +97,7 @@
                             <label for="aiDifficulty" class="block text-sm font-medium text-gray-700 mb-2">
                                 Difficulty Level
                             </label>
-                            <select 
+                            <select
                                 id="aiDifficulty"
                                 wire:model="aiDifficulty"
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500"
@@ -104,9 +118,9 @@
                 @endif
 
                 <div class="mt-6 sm:flex sm:flex-row-reverse">
-                    <x-button 
-                        wire:click="createDeck" 
-                        size="md" 
+                    <x-button
+                        wire:click="createDeck"
+                        size="md"
                         class="w-full sm:w-auto sm:ml-3"
                         :disabled="$isCreating"
                         wire:loading.attr="disabled"
@@ -124,10 +138,10 @@
                             @endif
                         </span>
                     </x-button>
-                    <x-button 
-                        wire:click="close" 
-                        variant="secondary" 
-                        size="md" 
+                    <x-button
+                        wire:click="close"
+                        variant="secondary"
+                        size="md"
                         class="w-full sm:w-auto mt-3 sm:mt-0"
                         :disabled="$isCreating"
                     >

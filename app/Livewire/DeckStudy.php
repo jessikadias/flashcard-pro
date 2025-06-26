@@ -143,7 +143,7 @@ class DeckStudy extends Component
     public function nextCard()
     {
         $this->showQuestion = true;
-        
+
         if ($this->currentCardIndex < $this->totalCards - 1) {
             $this->currentCardIndex++;
         } else {
@@ -167,7 +167,7 @@ class DeckStudy extends Component
      */
     public function getResultsProperty(): array
     {
-        $userName = explode(' ', $this->user->name)[0];
+        $userName = $this->user ? explode(' ', $this->user->name)[0] : 'Student';
         $correct = $this->correctAnswers;
         $total = $this->totalCards;
 
@@ -226,7 +226,18 @@ class DeckStudy extends Component
      */
     public function canAccess(): bool
     {
-        return $this->deck->user_id === auth()->id() || 
+        // If the deck is public, anyone can access it
+        if ($this->deck->is_public) {
+            return true;
+        }
+
+        // If not public, user must be authenticated
+        if (!auth()->check()) {
+            return false;
+        }
+
+        // Authenticated users can access if they own it or it's shared with them
+        return $this->deck->user_id === auth()->id() ||
                $this->deck->sharedWithUsers()->where('shared_with_user_id', auth()->id())->exists();
     }
 
@@ -247,7 +258,7 @@ class DeckStudy extends Component
         if (!$this->canAccess()) {
             abort(403);
         }
-        
+
         return view('livewire.deck-study')->layoutData(['title' => $this->title]);
     }
 }
