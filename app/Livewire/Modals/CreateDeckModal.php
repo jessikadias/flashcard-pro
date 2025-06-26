@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Modals;
 
+use App\Services\AIFlashcardGeneratorService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class CreateDeckModal extends Component
@@ -22,34 +24,65 @@ class CreateDeckModal extends Component
     public bool $isPublic = false;
 
     /**
-     * Validation rules
+     * AI generation options
      */
-    protected $rules = [
-        'deckName' => 'required|min:3|max:50',
+    public bool $useAI = false;
+    public string $aiTheme = '';
+    public string $aiDifficulty = 'beginner';
+    public array $aiDifficultyOptions = [
+        'beginner' => 'Beginner',
+        'intermediate' => 'Intermediate', 
+        'advanced' => 'Advanced'
     ];
 
     /**
-     * Validation messages
+     * Loading state for deck creation
      */
-    protected $messages = [
-        'deckName.required' => 'Please enter a deck name.',
-        'deckName.min' => 'Deck name must be at least 3 characters.',
-        'deckName.max' => 'Deck name cannot exceed 50 characters.',
-    ];
+    public bool $isCreating = false;
 
     /**
      * Listen for events from parent component
      */
-    protected $listeners = ['openCreateDeckModal' => 'open'];
+    protected $listeners = ['openCreateDeckModal'];
+
+    protected function rules(): array
+    {
+        $rules = [
+            'deckName' => 'required|string|max:50',
+        ];
+        
+        if ($this->useAI) {
+            $rules['aiTheme'] = 'required|string|max:255';
+        }
+        
+        return $rules;
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'deckName.required' => 'Deck name is required.',
+            'deckName.max' => 'Deck name cannot exceed 50 characters.',
+            'aiTheme.required' => 'Please enter a theme when using AI generation.',
+            'aiTheme.max' => 'Theme cannot exceed 255 characters.',
+        ];
+    }
+
+    /**
+     * Check if AI is available (API keys configured)
+     */
+    public function isAIAvailable(): bool
+    {
+        return AIFlashcardGeneratorService::isAvailable();
+    }
 
     /**
      * Open the modal
      */
-    public function open()
+    public function openCreateDeckModal()
     {
-        $this->deckName = '';
-        $this->isPublic = false;
         $this->show = true;
+        $this->resetForm();
     }
 
     /**
@@ -58,8 +91,17 @@ class CreateDeckModal extends Component
     public function close()
     {
         $this->show = false;
+        $this->resetForm();
+    }
+
+    public function resetForm()
+    {
         $this->deckName = '';
         $this->isPublic = false;
+        $this->useAI = false;
+        $this->aiTheme = '';
+        $this->aiDifficulty = 'beginner';
+        $this->isCreating = false;
         $this->resetValidation();
     }
 
@@ -70,23 +112,38 @@ class CreateDeckModal extends Component
     {
         $this->validate();
 
+        $this->isCreating = true;
+
         try {
             $deck = auth()->user()->decks()->create([
                 'name' => $this->deckName,
                 'is_public' => $this->isPublic,
             ]);
+
+            if ($this->useAI && $this->aiTheme) {
+                $generator = new AIFlashcardGeneratorService();
+                $aiSuccess = $generator->generateFlashcards($deck, $this->aiTheme, $this->aiDifficulty);
+                
+                if ($aiSuccess) {
+                    session()->flash('success', "Deck '{$this->deckName}' created successfully with AI-generated flashcards!");
+                } else {
+                    session()->flash('success', "Deck '{$this->deckName}' created successfully! AI generation failed, but you can add flashcards manually.");
+                }
+            } else {
+                session()->flash('success', "Deck '{$this->deckName}' created successfully!");
+            }
             
-            // Emit event to parent component
-            $this->dispatch('deckCreated', deckId: $deck->id);
-            
-            // Close modal
             $this->close();
             
-            // Redirect to deck edit page
-            return redirect()->route('decks.edit', ['deck' => $deck]);
+            $this->dispatch('deckCreated', ['deckId' => $deck->id]);
+            
+            return redirect()->route('decks.edit', $deck);
 
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to create deck. Please try again.');
+            Log::error('Deck creation failed: ' . $e->getMessage());
+        } finally {
+            $this->isCreating = false;
         }
     }
 
@@ -96,6 +153,14 @@ class CreateDeckModal extends Component
     public function updatedDeckName()
     {
         $this->resetValidation('deckName');
+    }
+
+    /**
+     * Handle AI theme changes
+     */
+    public function updatedAiTheme()
+    {
+        $this->resetValidation('aiTheme');
     }
 
     /**

@@ -5,6 +5,7 @@
                 <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
                     Create New Deck
                 </h3>
+                
                 <div>
                     <label for="deckName" class="block text-sm font-medium text-gray-700 mb-2">
                         Deck Name
@@ -44,11 +45,92 @@
                     </div>
                 </div>
 
+                @if($this->isAIAvailable())
+                <!-- AI Generation Section -->
+                <div class="mt-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="text-sm font-medium text-gray-700">
+                            Generate with AI
+                        </label>
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                   wire:model.live="useAI"
+                                   id="useAI"
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                            <label for="useAI" class="ml-2 text-sm text-gray-600">
+                                Use AI to create flashcards
+                            </label>
+                        </div>
+                    </div>
+
+                    @if($useAI)
+                    <div class="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <div>
+                            <label for="aiTheme" class="block text-sm font-medium text-gray-700 mb-2">
+                                Topic/Theme
+                            </label>
+                            <input
+                                type="text"
+                                id="aiTheme"
+                                wire:model.live="aiTheme"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                placeholder="e.g., Spanish vocabulary, Chemistry basics, History of Rome"
+                            />
+                            @error('aiTheme') <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label for="aiDifficulty" class="block text-sm font-medium text-gray-700 mb-2">
+                                Difficulty Level
+                            </label>
+                            <select 
+                                id="aiDifficulty"
+                                wire:model="aiDifficulty"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                            >
+                                @foreach($aiDifficultyOptions as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="text-xs text-blue-600 bg-blue-100 p-2 rounded">
+                            <p class="font-medium">ℹ️ AI will generate ~10 flashcards for you!</p>
+                            <p>You can edit or add more cards after creation.</p>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                @endif
+
                 <div class="mt-6 sm:flex sm:flex-row-reverse">
-                    <x-button wire:click="createDeck" size="md" class="w-full sm:w-auto sm:ml-3">
-                        Create Deck
+                    <x-button 
+                        wire:click="createDeck" 
+                        size="md" 
+                        class="w-full sm:w-auto sm:ml-3"
+                        :disabled="$isCreating"
+                        wire:loading.attr="disabled"
+                        wire:target="createDeck"
+                    >
+                        <span wire:loading.remove wire:target="createDeck" class="flex items-center justify-center">
+                            Create Deck
+                        </span>
+                        <span wire:loading.flex wire:target="createDeck" class="flex items-center justify-center">
+                            <x-icons.spinner class="mr-2 text-white animate-spin" />
+                            @if($useAI && $aiTheme)
+                                Generating...
+                            @else
+                                Creating...
+                            @endif
+                        </span>
                     </x-button>
-                    <x-button wire:click="close" variant="secondary" size="md" class="w-full sm:w-auto mt-3 sm:mt-0">
+                    <x-button 
+                        wire:click="close" 
+                        variant="secondary" 
+                        size="md" 
+                        class="w-full sm:w-auto mt-3 sm:mt-0"
+                        :disabled="$isCreating"
+                    >
                         Cancel
                     </x-button>
                 </div>
