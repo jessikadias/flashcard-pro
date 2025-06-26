@@ -28,13 +28,19 @@ After cloning the repository or unzipping the project, follow these steps:
    cd flashcard-pro
    ```
 
-2. **Run the setup script**
+2. **Remove macOS quarantine (if downloaded as zip)**
+   ```bash
+   # Only needed if you downloaded the project as a zip file
+   sudo xattr -r -d com.apple.quarantine .
+   ```
+
+3. **Run the setup script**
    ```bash
    chmod +x setup.sh
    ./setup.sh
    ```
 
-3. **Access the application**
+4. **Access the application*
    - Open your browser and navigate to: `http://flashcard.local:8080`
    - The application should be running with sample data
 
@@ -119,11 +125,19 @@ If you don't have access to an API key from these providers, feel free to reach 
 
 #### Common Issues and Solutions
 
-##### 1. Docker Not Running
+##### 1. macOS Quarantine Issues
+**Error**: `./setup.sh: Operation not permitted` or `Permission denied`
+**Solution**: Remove the quarantine attribute from all files:
+```bash
+sudo xattr -r -d com.apple.quarantine .
+chmod +x setup.sh
+```
+
+##### 2. Docker Not Running
 **Error**: `Docker is not running`
 **Solution**: Start Docker Desktop and wait for it to fully initialize before running the setup script.
 
-##### 2. Port Conflicts
+##### 3. Port Conflicts
 **Error**: Port 8080 or 3307 already in use
 **Solution**:
 - Stop any applications using these ports
@@ -134,24 +148,24 @@ If you don't have access to an API key from these providers, feel free to reach 
   ```
 - Update your hosts file accordingly
 
-##### 3. Permission Issues
+##### 4. Permission Issues
 **Error**: Permission denied when modifying `/etc/hosts`
 **Solution**: The script requires sudo access to modify the hosts file. Enter your password when prompted.
 
-##### 4. Composer Dependencies Fail
+##### 5. Composer Dependencies Fail
 **Error**: Composer install fails
 **Solution**:
 - Ensure you have PHP 8.1+ installed
 - Run: `composer install --no-interaction --ignore-platform-reqs`
 
-##### 5. Database Connection Issues
+##### 6. Database Connection Issues
 **Error**: Database connection refused
 **Solution**:
 - Wait longer for MySQL to start: `sleep 30`
 - Check if MySQL container is running: `./vendor/bin/sail ps`
 - Restart containers: `./vendor/bin/sail down && ./vendor/bin/sail up -d`
 
-##### 6. Frontend Build Fails
+##### 7. Frontend Build Fails
 **Error**: npm install or build fails
 **Solution**:
 - Clear npm cache: `./vendor/bin/sail npm cache clean --force`
