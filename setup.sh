@@ -56,6 +56,19 @@ if ! command -v composer &> /dev/null; then
 fi
 print_status "Composer is available"
 
+# Create required directories
+echo -e "\n${BLUE}Creating required directories...${NC}"
+mkdir -p bootstrap/cache
+mkdir -p storage/app/public
+mkdir -p storage/framework/cache/data
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/views
+mkdir -p storage/logs
+
+# Set proper permissions
+chmod -R 775 storage bootstrap/cache
+print_status "Required directories created with proper permissions"
+
 # Install dependencies
 echo -e "\n${BLUE}Installing dependencies...${NC}"
 if [ ! -d "vendor" ]; then
