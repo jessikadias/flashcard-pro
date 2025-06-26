@@ -8,19 +8,182 @@
 FlashcardPro is a Laravel + Livewire app that helps users create, organize, and study flashcards grouped in decks. It’s a simple and efficient tool for learning and memorization.
 
 ## Technologies Used
-- **PHP 8.2** – Core language used for backend logic  
-- **Laravel 12** – Web framework (routing, database, validation)  
-- **Laravel Breeze** – Authentication scaffolding  
-- **Laravel Livewire** – Reactive UI components  
+- **PHP 8.2** – Core language used for backend logic
+- **Laravel 12** – Web framework (routing, database, validation)
+- **Laravel Breeze** – Authentication scaffolding
+- **Laravel Livewire** – Reactive UI components
 - **Laravel Sail** - Docker setup
-- **Tailwind CSS** – Utility-first CSS  
-- **Vue.js** – Onboarding tutorial interaction  
-- **SQLite** – Used in development  
-- **MySQL** – Used in Docker setup  
+- **Tailwind CSS** – Utility-first CSS
+- **Vue.js** – Onboarding tutorial interaction
+- **SQLite** – Used in development
+- **MySQL** – Used in Docker setup
 - **Pest PHP** – Testing framework
 
 ## Setup Instructions
-- **TODO**: Add detailed setup instructions here, including how to run migrations and seeders.
+
+After cloning the repository or unzipping the project, follow these steps:
+
+1. **Navigate to the project directory**
+   ```bash
+   cd flashcard-pro
+   ```
+
+2. **Run the setup script**
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
+   ```
+
+3. **Access the application**
+   - Open your browser and navigate to: `http://flashcard.local:8080`
+   - The application should be running with sample data
+
+That's it! The setup script handles everything automatically. Read on for details about what happens during setup and troubleshooting tips.
+
+### Prerequisites
+
+Before running the setup script, ensure you have:
+
+- **macOS** (the script is designed for macOS)
+- **Docker Desktop** installed and running
+- **Composer** installed globally
+- **Terminal access** with sudo privileges
+
+### What the Setup Script Does
+
+The `setup.sh` script automates the entire development environment setup:
+
+#### 1. Prerequisite Checks
+- Verifies Docker is running
+- Confirms Composer is installed
+- Validates the operating system
+
+#### 2. Dependency Installation
+- Installs PHP dependencies via Composer
+- Creates the `.env` file from `.env.example`
+
+#### 3. Environment Configuration
+- Sets up custom domain: `flashcard.local`
+- Configures application port: `8080`
+- Configures database port: `3307` (to avoid conflicts)
+- Generates Laravel application key
+
+#### 4. Domain Setup
+- Adds `flashcard.local` to your `/etc/hosts` file (requires sudo)
+- This allows you to access the app via a friendly domain name
+
+#### 5. Docker Environment
+- Starts Laravel Sail containers (PHP, MySQL, Redis)
+- Waits for the database to be ready
+
+#### 6. Database Setup
+- Runs database migrations to create tables
+- Seeds the database with sample data (users, decks, flashcards)
+
+#### 7. Frontend Assets
+- Installs Node.js dependencies
+- Builds frontend assets (CSS, JavaScript)
+
+### AI Integration Setup (Optional)
+
+Flashcard Pro includes AI-powered features for generating flashcards and study content. To enable these features:
+
+#### Supported AI Providers
+- **OpenAI** (GPT-4, GPT-3.5)
+- **Anthropic** (Claude)
+- **Google Gemini**
+
+#### Getting API Keys
+1. Choose one of the supported providers
+2. Sign up for an account and obtain an API key:
+   - **OpenAI**: https://platform.openai.com/api-keys
+   - **Anthropic**: https://console.anthropic.com/
+   - **Google Gemini**: https://aistudio.google.com/app/apikey
+
+3. Add your API key to the `.env` file:
+   ```bash
+   # For OpenAI
+   OPENAI_API_KEY=your_openai_api_key_here
+
+   # For Anthropic
+   ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+   # For Google Gemini
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+
+#### Need Help with API Keys?
+If you don't have access to an API key from these providers, feel free to reach out to me. I can provide you with a temporary API key for testing purposes.
+
+### Troubleshooting
+
+#### Common Issues and Solutions
+
+##### 1. Docker Not Running
+**Error**: `Docker is not running`
+**Solution**: Start Docker Desktop and wait for it to fully initialize before running the setup script.
+
+##### 2. Port Conflicts
+**Error**: Port 8080 or 3307 already in use
+**Solution**:
+- Stop any applications using these ports
+- Or modify the ports in `.env`:
+  ```bash
+  APP_PORT=8081
+  FORWARD_DB_PORT=3308
+  ```
+- Update your hosts file accordingly
+
+##### 3. Permission Issues
+**Error**: Permission denied when modifying `/etc/hosts`
+**Solution**: The script requires sudo access to modify the hosts file. Enter your password when prompted.
+
+##### 4. Composer Dependencies Fail
+**Error**: Composer install fails
+**Solution**:
+- Ensure you have PHP 8.1+ installed
+- Run: `composer install --no-interaction --ignore-platform-reqs`
+
+##### 5. Database Connection Issues
+**Error**: Database connection refused
+**Solution**:
+- Wait longer for MySQL to start: `sleep 30`
+- Check if MySQL container is running: `./vendor/bin/sail ps`
+- Restart containers: `./vendor/bin/sail down && ./vendor/bin/sail up -d`
+
+##### 6. Frontend Build Fails
+**Error**: npm install or build fails
+**Solution**:
+- Clear npm cache: `./vendor/bin/sail npm cache clean --force`
+- Remove node_modules: `./vendor/bin/sail exec app rm -rf node_modules`
+- Reinstall: `./vendor/bin/sail npm install`
+
+### Getting Started with User Accounts
+
+After setup, you have two options to access the application:
+
+#### Option 1: Use Pre-seeded Test Accounts
+The database seeder creates several test accounts you can use immediately:
+
+- **John Doe**: `john@example.com` / `password`
+- **Jane Smith**: `jane@example.com` / `password`
+- **Bob Wilson**: `bob@example.com` / `password`
+- **Test User**: `test@example.com` / `password` (designed for new user onboarding experience)
+
+#### Option 2: Create Your Own Account
+- Visit `http://flashcard.local:8080/register`
+- Create a new account with your preferred email and password
+- Experience the full onboarding flow as a new user
+
+**Note**: All seeded accounts have `onboarding_completed` set to `false`, so you'll experience the onboarding tutorial on first login regardless of which account you choose.
+
+### Next Steps
+
+Once your environment is running:
+1. Explore the application features
+2. Review the codebase structure
+3. Run the test suite: `./vendor/bin/sail artisan test`
+5. Set up your AI API keys for enhanced features
 
 ## ✨ Extra Features
 
@@ -76,18 +239,18 @@ The FlashcardPro application provides a REST API that allows authenticated users
 ### 🔧 Endpoints Overview
 
 #### ✅ Health Check
-- `GET /api/status`  
+- `GET /api/status`
   Returns basic API metadata, including status, version, environment, and timestamp. Useful to confirm the application is up and running.
 
 #### 📚 User Decks
-- `GET /api/decks` – Retrieve all decks for the authenticated user  
-- `POST /api/decks` – Create a new deck  
-- `GET /api/decks/{deckId}` – Retrieve a specific deck by ID  
-- `PUT /api/decks/{deckId}` – Update a specific deck  
+- `GET /api/decks` – Retrieve all decks for the authenticated user
+- `POST /api/decks` – Create a new deck
+- `GET /api/decks/{deckId}` – Retrieve a specific deck by ID
+- `PUT /api/decks/{deckId}` – Update a specific deck
 - `DELETE /api/decks/{deckId}` – Delete a specific deck
 
 #### 👤 User Profile
-- `GET /api/profile`  
+- `GET /api/profile`
   Returns basic profile data for the authenticated user (ID, name, email, and account creation date).
 
 ---
