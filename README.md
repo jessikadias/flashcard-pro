@@ -1,11 +1,33 @@
-# FlashcardPro
+# FlashCard Pro
+
+<div align="center">
+  <img src="public/images/flashcardpro-logo.png" alt="FlashCard Pro Logo" width="200" height="200">
+</div>
+
+## Summary
+
+- [Author](#author)
+- [Project Description](#project-description)
+- [Technologies Used](#technologies-used)
+- [Setup Instructions](#setup-instructions)
+  - [Prerequisites](#prerequisites)
+  - [What the Setup Script Does](#what-the-setup-script-does)
+- [AI Integration Setup (Optional)](#ai-integration-setup-optional)
+- [Troubleshooting](#troubleshooting)
+- [Getting Started with User Accounts](#getting-started-with-user-accounts)
+- [Next Steps](#next-steps)
+- [✨ Extra Features](#-extra-features)
+- [🏗️ Architectural Decisions and Assumptions](#️-architectural-decisions-and-assumptions)
+- [🌐 Public API](#-public-api)
+- [🤖 AI Tool Usage Disclosure](#-ai-tool-usage-disclosure)
+- [🤝 Support and Collaboration](#-support-and-collaboration)
 
 ## Author
 **Name**: Jéssika Dias
 **Email**: jessikaldias@gmail.com
 
 ## Project Description
-FlashcardPro is a Laravel + Livewire app that helps users create, organize, and study flashcards grouped in decks. It’s a simple and efficient tool for learning and memorization.
+FlashCard Pro is a Laravel + Livewire app that helps users create, organize, and study flashcards grouped in decks. It's a simple and efficient tool for learning and memorization.
 
 ## Technologies Used
 - **PHP 8.2** – Core language used for backend logic
@@ -226,16 +248,16 @@ For the final Docker-based version, I switched to **MySQL** to simulate a produc
 
 Although I already had prior experience with **Laravel**, this was my first time working with **Livewire** and **Alpine.js**.
 
-I really enjoyed working with Livewire and being able to use a single language for both the front-end and back-end. Development felt natural and moved at a good pace, which was great. Since the project had a simple scope, I didn’t run into the kinds of challenges that might come up in a large-scale application — but it was still a very valuable learning experience.
+I really enjoyed working with Livewire and being able to use a single language for both the front-end and back-end. Development felt natural and moved at a good pace, which was great. Since the project had a simple scope, I didn't run into the kinds of challenges that might come up in a large-scale application — but it was still a very valuable learning experience.
 
 I used Alpine.js in a few specific UI controls, such as toggling the navigation menu and notifications, and I found it to be a good fit for lightweight, dynamic interfaces.
 
 
 ### 🧭 Onboarding Tutorial with Vue.js
 
-As part of the challenge, I wanted to build a feature using **Vue**. Although I didn’t have prior experience with Vue in production, I’m very familiar with similar concepts from working with **Angular (2+)** and **React**, so I saw this as a good opportunity to explore the framework through this feature.
+As part of the challenge, I wanted to build a feature using **Vue**. Although I didn't have prior experience with Vue in production, I'm very familiar with similar concepts from working with **Angular (2+)** and **React**, so I saw this as a good opportunity to explore the framework through this feature.
 
-This functionality required a multi-step flow with transitions, conditional rendering, and client-side state management. It also needed to be integrated with the backend to store a flag in the database indicating whether the user had already seen the tutorial, so it wouldn’t be shown again on future logins.
+This functionality required a multi-step flow with transitions, conditional rendering, and client-side state management. It also needed to be integrated with the backend to store a flag in the database indicating whether the user had already seen the tutorial, so it wouldn't be shown again on future logins.
 
 
 ### ✅ Authorization: Laravel Policies
@@ -248,7 +270,7 @@ This decision helped me simplify the codebase and make authorization clearer and
 
 ## 🌐 Public API
 
-The FlashcardPro application provides a REST API that allows authenticated users to manage their decks and view their own profile information. All routes are protected by an authentication middleware developed for this project.
+The FlashCard Pro application provides a REST API that allows authenticated users to manage their decks and view their own profile information. All routes are protected by an authentication middleware developed for this project.
 
 ### 🔧 Endpoints Overview
 
@@ -344,4 +366,4 @@ During the development of this project, I got some occasional help from my husba
 
 - **Generate Flashcards with AI**: Tiago helped me choose the library (Prism) and debug a schema issue with the OpenAI API. The API required the schema to start with an object instead of an array. We fixed the structure accordingly, which solved the problem.
 
-Tiago’s help was limited to discussions and debugging support, similar to how I would collaborate with a teammate or tech lead during real-world development.
+Tiago's help was limited to discussions and debugging support, similar to how I would collaborate with a teammate or tech lead during real-world development.
