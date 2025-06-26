@@ -75,7 +75,7 @@ class DeckList extends Component
         $this->currentOffset = 0;
         $this->hasMoreDecks = true;
         $decks = $this->fetchDecks($this->loadPerBatch, 0);
-        
+
         $this->loadedDecks = $decks;
         $this->currentOffset = $decks->count();
         $this->hasMoreDecks = $decks->count() === $this->loadPerBatch;
@@ -90,12 +90,9 @@ class DeckList extends Component
 
         // Apply search filter only if 3 or more characters
         if (strlen($this->search) >= 3) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                  ->orWhere('description', 'like', '%' . $this->search . '%');
-            });
+            $query->where('name', 'like', '%' . $this->search . '%');
         }
-        
+
         return $query->orderBy('name')
                     ->skip($offset)
                     ->take($limit)
@@ -123,14 +120,14 @@ class DeckList extends Component
         $this->isLoading = true;
 
         $newDecks = $this->fetchDecks($this->loadPerBatch, $this->currentOffset);
-        
+
         // Add new decks to the existing collection
         $this->loadedDecks = $this->loadedDecks->concat($newDecks);
-        
+
         // Update offset and check if there are more decks
         $this->currentOffset += $newDecks->count();
         $this->hasMoreDecks = $newDecks->count() === $this->loadPerBatch;
-        
+
         $this->isLoading = false;
     }
 
@@ -160,7 +157,7 @@ class DeckList extends Component
 
         try {
             $deck = \App\Models\Deck::find($deckId);
-            
+
             if (!$deck) {
                 session()->flash('error', 'Deck not found.');
                 return;
@@ -178,14 +175,14 @@ class DeckList extends Component
 
             // Remove the sharing relationship
             $deck->sharedWithUsers()->where('shared_with_user_id', auth()->id())->detach();
-            
+
             session()->flash('success', 'Deck removed from your shared decks.');
-            
+
             // Refresh the component to update the deck list
             $this->dispatch('$refresh');
-            
+
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to remove deck sharing.');
         }
     }
-} 
+}

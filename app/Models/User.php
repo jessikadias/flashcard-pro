@@ -98,7 +98,7 @@ class User extends Authenticatable
 
     public function hasCompletedOnboarding(): bool
     {
-        return $this->onboarding_completed;
+        return (bool) $this->onboarding_completed;
     }
 
     /**
@@ -108,7 +108,7 @@ class User extends Authenticatable
     {
         $this->api_token = Str::random(80);
         $this->save();
-        
+
         return $this->api_token;
     }
 
@@ -120,4 +120,4 @@ class User extends Authenticatable
         $this->api_token = null;
         $this->save();
     }
-} 
+}

@@ -17,7 +17,6 @@ defineProps({ step: Object, isLastStep: Boolean })
         <p class="text-gray-600 leading-relaxed mb-4">
             {{ step.description }}
         </p>
-        <!-- Bloco de imagem/icon com altura fixa -->
         <div class="flex items-center justify-center w-full mb-6" style="height: 200px;">
             <template v-if="step.image">
                 <div
@@ -28,7 +27,6 @@ defineProps({ step: Object, isLastStep: Boolean })
             <template v-else-if="isLastStep">
                 <SparklesIcon class="w-24 h-24 text-primary-800 opacity-80 mx-auto" />
             </template>
-            <!-- Se não houver imagem nem for o último step, o espaço fica vazio -->
         </div>
     </div>
 </template>
